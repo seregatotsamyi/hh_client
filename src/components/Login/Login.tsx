@@ -2,10 +2,10 @@ import React from 'react';
 import {Navigate, useLocation } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import RegistrationForm from "./RegistrationForm";
-import {LOGIN_PATH} from "../../utils/consts";
+import {LOGIN_PATH, MAIN_PATH} from "../../utils/consts";
 import {useDispatch, useSelector} from "react-redux";
 import { RootState } from '../../store/store';
-import {setAuth} from "../../store/authReducer";
+
 
 
 
@@ -15,13 +15,12 @@ const Login: React.FC = () => {
     const isLogin:string = location.pathname
 
     const isAuth = useSelector((state: RootState) => state.auth.isAuth)
-    console.log(isAuth)
-
-
 
     if (isAuth) {
-        return <Navigate to="/"/>
+        return <Navigate to={MAIN_PATH}/>
     }
+
+
 
     return (
         <section className="login">

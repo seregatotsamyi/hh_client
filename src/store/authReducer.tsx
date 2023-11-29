@@ -1,56 +1,93 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import { authAPI } from '../api/api'
-import {SetAuthUserDataType} from "../type/type";
+import {authAPI} from '../api/api'
+import {
+    loginFormType,
+    RegistrationFormApplicantType,
+    SetAuthUserDataJWTType,
+    SetAuthUserDataType,
+    SetErrorType
+} from "../type/type";
+import {jwtDecode} from "jwt-decode";
 
 
 export interface InitialStateType {
     isAuth: boolean,
     login: string | null,
-    userId: number | null
+    userId: number | null,
+    error: string | null
+    role: string | null
+    isSuccessRegistration: boolean
 }
 
 const initialState: InitialStateType = {
     isAuth: false,
     login: null,
-    userId: null
+    userId: null,
+    error: null,
+    role: null,
+    isSuccessRegistration: false
 }
 
 export const authReducer = createSlice({
     name: 'auth',
-    initialState: {
-        isAuth: false,
-    },
+    initialState,
     reducers: {
-        setAuth: (state) => {
-            console.log(state)
-            state.isAuth = !state.isAuth
+
+        setAuthData: (state, action: PayloadAction<SetAuthUserDataType>) => {
+            Object.assign(state, action.payload)
         },
-        setAuthData: (state, action:PayloadAction<SetAuthUserDataType>) => {
-            console.log(action)
+
+        setError: (state, action: PayloadAction<SetErrorType>) => {
+            state.error = action.payload.error
+        },
+
+        unSetError: (state) => {
+            state.error = null
+        },
+
+        isSuccessRegistration: (state) => {
+            state.isSuccessRegistration = !state.isSuccessRegistration
         }
     },
 })
 
-export const { setAuth } = authReducer.actions
 
-export const { setAuthData } = authReducer.actions
+export const {setAuthData, setError, unSetError, isSuccessRegistration} = authReducer.actions
 
-export const login = () => async (dispatch:any) => {
+
+export const loginApl = (data: loginFormType) => async (dispatch: any) => {
     try {
-        // let response = await authAPI.me()
-        // console.log("getAuthUserData", response)
-        let id = 312
-        let login = "fsdasdf"
-        dispatch(setAuthData({id, login}))
+        const response = await authAPI.loginApl(data.login, data.password, data.role)
+        const jwt:SetAuthUserDataJWTType = jwtDecode(response.data.token)
+        localStorage.setItem('token', response.data.token)
+        dispatch(unSetError())
+
+        let dataForReducer = {userId: jwt.id, login: jwt.login, role: jwt.role, isAuth: true}
+        dispatch(setAuthData(dataForReducer))
+
+    } catch (err: any) {
+        const error = err.response.data.message
+        dispatch(setError({error}))
+    }
+}
+
+export const registerApl = (data: RegistrationFormApplicantType) => async (dispatch: any) => {
+    try {
+        const response = await authAPI.registerApl(data.firstName, data.secondName, data.surname, data.phone, data.login, data.password, data.email, data.role)
+        localStorage.setItem('token', response.data.token)
+        const jwt = jwtDecode(response.data.token)
+        dispatch(unSetError())
+        dispatch(isSuccessRegistration())
+
 
 
     } catch (err: any) {
-        if (err.status === 401) {
-            console.log("error 401")
-        }
-
+        const error = err.response.data.message
+        dispatch(setError({error}))
     }
 }
+
+
 
 
 export default authReducer.reducer

@@ -1,4 +1,5 @@
-import {Action, configureStore, getDefaultMiddleware, Middleware, } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import appReducer from "./appReducer";
 import authReducer from "./authReducer";
 
 
@@ -10,7 +11,8 @@ const middleware = getDefaultMiddleware({
 
 export const store = configureStore({
     reducer: {
-        auth : authReducer
+        auth : authReducer,
+        app : appReducer,
     },
     middleware,
     devTools: process.env.NODE_ENV !== 'production',
