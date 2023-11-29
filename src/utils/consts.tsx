@@ -1,0 +1,6 @@
+export const LOGIN_PATH = '/login'
+export const REGISTRATION_PATH = '/registration'
+export const SETTINGS_PATH = '/settings'
+export const CREATE_VACANCY_PATH = '/create'
+export const MAIN_PATH = '/'
+export const PROFILE_PATH = '/profile'
