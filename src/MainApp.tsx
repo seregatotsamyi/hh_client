@@ -11,8 +11,9 @@ import {initializeApp, loadingStatus} from "./store/appReducer";
 const routers = router;
 
 const MainApp = () => {
-
     const dispatch = useDispatch()
+
+
     const loading = useSelector((state: RootState) => state.app.loading)
 
     useEffect(() => {

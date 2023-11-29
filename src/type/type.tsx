@@ -1,7 +1,7 @@
 export type SetAuthUserDataType = {
-    userId: number,
-    login: string,
-    role: string
+    userId: number | null,
+    login: string | null,
+    role: string | null
 }
 export type SetAuthUserDataJWTType = {
     id: number,

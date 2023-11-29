@@ -37,6 +37,13 @@ export const authReducer = createSlice({
             Object.assign(state, action.payload)
         },
 
+        removeAuthData: (state)=>{
+            state.isAuth = false
+            state.login = null
+            state.userId = null
+            state.role = null
+        },
+
         setError: (state, action: PayloadAction<SetErrorType>) => {
             state.error = action.payload.error
         },
@@ -52,7 +59,7 @@ export const authReducer = createSlice({
 })
 
 
-export const {setAuthData, setError, unSetError, isSuccessRegistration} = authReducer.actions
+export const {setAuthData, setError, unSetError, isSuccessRegistration, removeAuthData} = authReducer.actions
 
 
 export const loginApl = (data: loginFormType) => async (dispatch: any) => {
@@ -70,6 +77,7 @@ export const loginApl = (data: loginFormType) => async (dispatch: any) => {
         dispatch(setError({error}))
     }
 }
+
 
 export const registerApl = (data: RegistrationFormApplicantType) => async (dispatch: any) => {
     try {

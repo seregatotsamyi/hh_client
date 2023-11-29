@@ -26,9 +26,6 @@ export const authAPI = {
         })
     },
 
-    // logout() {
-    //     return instance.post(`auth/jwt/logout`);
-    // }
 }
 
 const instance = axios.create({
