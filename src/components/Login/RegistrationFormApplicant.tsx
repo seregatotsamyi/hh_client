@@ -32,10 +32,6 @@ const RegistrationFormApplicant = () => {
 
     const isSuccessRegistration = useSelector((state: RootState) => state.auth.isSuccessRegistration)
 
-    if (isSuccessRegistration) {
-        return <Navigate to={LOGIN_PATH}/>
-    }
-
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

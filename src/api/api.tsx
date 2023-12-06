@@ -26,7 +26,30 @@ export const authAPI = {
         })
     },
 
+    registerEmp(login: string, name: string, email: string, password: string, phone: string, settlements_id: number, street_id: number, number_house: number, role: string, short_name: string | null) {
+
+        return instance.post('api/employer/registration', {
+            login,
+            name,
+            email,
+            password,
+            phone,
+            settlements_id,
+            role,
+            street_id,
+            number_house,
+            short_name
+        })
+    },
+
 }
+
+export const addressAPI = {
+    get(stroke:string){
+        return instance.get(`api/address/${stroke}`)
+    }
+}
+
 
 const instance = axios.create({
     baseURL: process.env.REACT_APP_API_URL
@@ -39,3 +62,6 @@ const authInterceptor = config => {
 }
 
 instance.interceptors.request.use(authInterceptor)
+
+
+

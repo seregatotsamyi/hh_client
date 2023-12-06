@@ -13,6 +13,13 @@ export type SetErrorType = {
     error: string
 }
 
+export type SetOptionsType = {
+    data: Array<object>
+}
+export type OptionType = {
+    value: number,
+    label: string
+}
 
 export interface RegistrationFormApplicantType {
     firstName: string
@@ -25,6 +32,21 @@ export interface RegistrationFormApplicantType {
     email: string | null
     check: boolean,
     role: string
+}
+
+export interface RegistrationFormEmployerType {
+    login: string
+    name: string
+    email: string
+    password: string
+    passwordSecond: string
+    phone: string
+    settlements_id: number
+    street_id: number
+    number_house: number
+    check: boolean,
+    role: string,
+    short_name: string | null
 }
 
 export interface loginFormType {

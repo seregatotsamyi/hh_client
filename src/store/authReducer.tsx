@@ -2,12 +2,13 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {authAPI} from '../api/api'
 import {
     loginFormType,
-    RegistrationFormApplicantType,
+    RegistrationFormApplicantType, RegistrationFormEmployerType,
     SetAuthUserDataJWTType,
     SetAuthUserDataType,
     SetErrorType
 } from "../type/type";
 import {jwtDecode} from "jwt-decode";
+import React from "react";
 
 
 export interface InitialStateType {
@@ -88,6 +89,31 @@ export const registerApl = (data: RegistrationFormApplicantType) => async (dispa
         dispatch(isSuccessRegistration())
 
 
+
+    } catch (err: any) {
+        const error = err.response.data.message
+        dispatch(setError({error}))
+    }
+}
+
+export const registerEmp = (data: RegistrationFormEmployerType) => async (dispatch: any) => {
+    try {
+        const response = await authAPI.registerEmp(
+            data.login,
+            data.name,
+            data.email,
+            data.password,
+            data.phone,
+            data.settlements_id,
+            data.street_id,
+            data.number_house,
+            data.role,
+            data.short_name
+        )
+        localStorage.setItem('token', response.data.token)
+        const jwt = jwtDecode(response.data.token)
+        dispatch(unSetError())
+        dispatch(isSuccessRegistration())
 
     } catch (err: any) {
         const error = err.response.data.message
