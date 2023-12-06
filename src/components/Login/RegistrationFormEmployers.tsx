@@ -7,7 +7,7 @@ import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {OptionType, RegistrationFormEmployerType} from "../../type/type";
 import {registerEmp} from "../../store/authReducer";
 import {
-    emailField,
+    emailFieldRequired,
     loginField,
     nameField, nameField2, numberField,
     passwordField,
@@ -15,25 +15,35 @@ import {
     requiredField
 } from "../../utils/validators/validators";
 import {Select, Spin} from 'antd';
-import {fetchOptions} from "../../store/inputReducer";
+import {fetchOptionsSettlements, fetchOptionsStreet} from "../../store/inputReducer";
 
 
 const RegistrationFormEmployers = () => {
 
     const dispatch = useDispatch()
 
-    const options = useSelector((state: RootState) => state.input.options)
+    const optionsSettlements = useSelector((state: RootState) => state.input.optionsSettlements)
+
+    const optionsStreet = useSelector((state: RootState) => state.input.optionsStreet)
 
     const [fetching, setFetching] = useState(false);
 
     const fetchRef = useRef(0);
 
 
-    const setOption = (stroke: string) => {
+    const setOptionSettlements = (stroke: string) => {
         setFetching(true)
         fetchRef.current += 1;
         const fetchId = fetchRef.current;
-        dispatch(fetchOptions(stroke))
+        dispatch(fetchOptionsSettlements(stroke))
+        setFetching(false)
+    }
+
+    const setOptionStreet = (stroke: string) => {
+        setFetching(true)
+        fetchRef.current += 1;
+        const fetchId = fetchRef.current;
+        dispatch(fetchOptionsStreet(stroke))
         setFetching(false)
     }
 
@@ -46,9 +56,10 @@ const RegistrationFormEmployers = () => {
         data.role = ROLE_EMP
         // @ts-ignore
         data.settlements_id = data.settlements_id.value
+        // @ts-ignore
+        data.street_id = data.street_id.value
         console.log(data)
-        data.street_id = 1
-        //dispatch(registerEmp(data))
+        dispatch(registerEmp(data))
     }
 
     const isSuccessRegistration = useSelector((state: RootState) => state.auth.isSuccessRegistration)
@@ -58,16 +69,19 @@ const RegistrationFormEmployers = () => {
     }
 
 
-    const optionsSet = options.map((e: any): OptionType => ({
+    const optionsSettlementsSet = optionsSettlements.map((e: any): OptionType => ({
         value: e.id,
         label: e.settlement,
     }))
 
+    const optionsStreetSet = optionsStreet.map((e: any): OptionType => ({
+        value: e.id,
+        label: e.name,
+    }))
 
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-
 
 
             <ul className="login__grid">
@@ -114,7 +128,8 @@ const RegistrationFormEmployers = () => {
                             <label className="input__label" htmlFor="email">
                                 E-mail
                             </label>
-                            <input className="input__input" id="email" {...register("email", emailField)} type="email"
+                            <input className="input__input" id="email" {...register("email", emailFieldRequired)}
+                                   type="email"
                                    placeholder="example@exml.ru"/>
                         </div>
                         {
@@ -206,37 +221,34 @@ const RegistrationFormEmployers = () => {
 
 
                             <label className="input__label" htmlFor="settlements_id">
-                                Город (населенный пункт)
+                                Город (населенный пункт, район)
                             </label>
                             <Controller
                                 control={control}
                                 name='settlements_id'
-
+                                rules={{
+                                    required: "Поле обязательно для заполнение",
+                                }}
                                 render={({field}) => (
                                     <>
                                         <Select {...field}
                                                 showSearch
                                                 className={"ant-custom"}
                                                 labelInValue
-                                                options={optionsSet}
+                                                options={optionsSettlementsSet}
 
                                                 filterOption={(input, option?) =>
                                                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
 
 
-
                                                 filterSort={(optionA, optionB) =>
                                                     (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                                                 }
-                                                onSearch={(value:string) => {
-                                                    setOption(value)
+                                                onSearch={(value: string) => {
+                                                    setOptionSettlements(value)
                                                 }}
                                                 notFoundContent={fetching ? <Spin size="small"/> : null}
-
-
-
                                         />
-
 
 
                                     </>
@@ -258,8 +270,37 @@ const RegistrationFormEmployers = () => {
                             <label className="input__label" htmlFor="street_id">
                                 Улица (пр-т)
                             </label>
-                            <input className="input__input" id="street_id" {...register("street_id", nameField)}
-                                   type="text" placeholder="ул. Брестская"/>
+                            <Controller
+                                control={control}
+                                name='street_id'
+                                rules={{
+                                    required: "Поле обязательно для заполнение",
+                                }}
+                                render={({field}) => (
+                                    <>
+                                        <Select {...field}
+                                                showSearch
+                                                className={"ant-custom"}
+                                                labelInValue
+                                                options={optionsStreetSet}
+
+                                                filterOption={(input, option?) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+
+
+                                                filterSort={(optionA, optionB) =>
+                                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                                }
+                                                onSearch={(value: string) => {
+                                                    setOptionStreet(value)
+                                                }}
+                                                notFoundContent={fetching ? <Spin size="small"/> : null}
+                                        />
+
+
+                                    </>
+                                )}
+                            />
                         </div>
                         {
                             errors.street_id && (

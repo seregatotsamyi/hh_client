@@ -79,6 +79,22 @@ export const loginApl = (data: loginFormType) => async (dispatch: any) => {
     }
 }
 
+export const loginEmp = (data: loginFormType) => async (dispatch: any) => {
+    try {
+        const response = await authAPI.loginEmp(data.login, data.password, data.role)
+        const jwt:SetAuthUserDataJWTType = jwtDecode(response.data.token)
+        localStorage.setItem('token', response.data.token)
+        dispatch(unSetError())
+
+        let dataForReducer = {userId: jwt.id, login: jwt.login, role: jwt.role, isAuth: true}
+        dispatch(setAuthData(dataForReducer))
+
+    } catch (err: any) {
+        const error = err.response.data.message
+        dispatch(setError({error}))
+    }
+}
+
 
 export const registerApl = (data: RegistrationFormApplicantType) => async (dispatch: any) => {
     try {
@@ -87,8 +103,6 @@ export const registerApl = (data: RegistrationFormApplicantType) => async (dispa
         const jwt = jwtDecode(response.data.token)
         dispatch(unSetError())
         dispatch(isSuccessRegistration())
-
-
 
     } catch (err: any) {
         const error = err.response.data.message

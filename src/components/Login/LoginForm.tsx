@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {SubmitHandler, useForm} from "react-hook-form";
 import {loginFormType, RegistrationFormApplicantType} from "../../type/type";
 import {requiredField} from "../../utils/validators/validators";
-import {loginApl} from "../../store/authReducer";
+import {loginApl, loginEmp} from "../../store/authReducer";
 import {RootState} from "../../store/store";
 
 
@@ -17,7 +17,7 @@ const LoginForm: React.FC = () => {
 
     const onSubmit: SubmitHandler<loginFormType> = (data) => {
         if (data.role === ROLE_EMP) {
-            console.log("employers login")
+            dispatch(loginEmp(data))
         } else {
             dispatch(loginApl(data))
         }

@@ -13,6 +13,14 @@ export const authAPI = {
         })
     },
 
+    loginEmp(login: string, password: string, role: string) {
+        return instance.post('api/employer/login', {
+            login,
+            password,
+            role
+        })
+    },
+
     registerApl(firstName: string, secondName: string, surname: string, phone: string, login: string, password: string, email: string | null, role: string) {
 
         return instance.post('api/applicant/registration', {
@@ -45,8 +53,11 @@ export const authAPI = {
 }
 
 export const addressAPI = {
-    get(stroke:string){
-        return instance.get(`api/address/${stroke}`)
+    getSettlements(stroke:string){
+        return instance.get(`api/address/settlements/${stroke}`)
+    },
+    getStreet(stroke:string){
+        return instance.get(`api/address/street/${stroke}`)
     }
 }
 
