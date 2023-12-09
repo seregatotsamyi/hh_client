@@ -1,3 +1,5 @@
+import {ROLE_APL, ROLE_EMP} from "../utils/consts";
+
 export type SetAuthUserDataType = {
     userId: number | null,
     login: string | null,
@@ -54,3 +56,4 @@ export interface loginFormType {
     password: string
     role: string
 }
+export type typeRoll = typeof ROLE_EMP | typeof ROLE_APL

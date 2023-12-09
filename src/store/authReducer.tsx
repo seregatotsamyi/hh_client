@@ -38,7 +38,7 @@ export const authReducer = createSlice({
             Object.assign(state, action.payload)
         },
 
-        removeAuthData: (state)=>{
+        removeAuthData: (state) => {
             state.isAuth = false
             state.login = null
             state.userId = null
@@ -66,7 +66,7 @@ export const {setAuthData, setError, unSetError, isSuccessRegistration, removeAu
 export const loginApl = (data: loginFormType) => async (dispatch: any) => {
     try {
         const response = await authAPI.loginApl(data.login, data.password, data.role)
-        const jwt:SetAuthUserDataJWTType = jwtDecode(response.data.token)
+        const jwt: SetAuthUserDataJWTType = jwtDecode(response.data.token)
         localStorage.setItem('token', response.data.token)
         dispatch(unSetError())
 
@@ -82,7 +82,7 @@ export const loginApl = (data: loginFormType) => async (dispatch: any) => {
 export const loginEmp = (data: loginFormType) => async (dispatch: any) => {
     try {
         const response = await authAPI.loginEmp(data.login, data.password, data.role)
-        const jwt:SetAuthUserDataJWTType = jwtDecode(response.data.token)
+        const jwt: SetAuthUserDataJWTType = jwtDecode(response.data.token)
         localStorage.setItem('token', response.data.token)
         dispatch(unSetError())
 
@@ -134,8 +134,6 @@ export const registerEmp = (data: RegistrationFormEmployerType) => async (dispat
         dispatch(setError({error}))
     }
 }
-
-
 
 
 export default authReducer.reducer

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {loginFormType} from "../type/type";
 
 export const authAPI = {
     me() {
@@ -9,7 +10,7 @@ export const authAPI = {
         return instance.post('api/applicant/login', {
             login,
             password,
-            role
+            role,
         })
     },
 

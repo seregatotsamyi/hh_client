@@ -5,7 +5,7 @@ import './css/style.min.css';
 import router from "./routes";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/store";
-import {initializeApp, loadingStatus} from "./store/appReducer";
+import {initializeApp, setWidth} from "./store/appReducer";
 
 
 const routers = router;
@@ -16,14 +16,20 @@ const MainApp = () => {
     const loading = useSelector((state: RootState) => state.app.loading)
 
     useEffect(() => {
+        dispatch(setWidth(window.innerWidth))
         dispatch(initializeApp())
-        dispatch(loadingStatus(false))
+
+        window.onresize = () => {
+            dispatch(setWidth(window.innerWidth));
+        };
     }, [])
+
 
 
     if (loading){
         return <>Загрузка</>
     }
+
     return <RouterProvider router={routers}/>
 }
 

@@ -28,10 +28,6 @@ const router = createBrowserRouter([
                 element: <Profile/>
             },
             {
-                path: SETTINGS_PATH,
-                element: <Profile/>
-            },
-            {
                 path: CREATE_VACANCY_PATH,
                 element: <CreateVacancy/>
             },
