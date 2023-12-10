@@ -1,5 +1,5 @@
 import axios from "axios";
-import {loginFormType} from "../type/type";
+import {ProfileAplForm, ProfileEmpForm} from "../type/type";
 
 export const authAPI = {
     me() {
@@ -59,6 +59,36 @@ export const addressAPI = {
     },
     getStreet(stroke:string){
         return instance.get(`api/address/street/${stroke}`)
+    }
+}
+
+export const userAPI = {
+    getApl(id:number){
+        return instance.get(`api/applicant/${id}`)
+    },
+    getEmp(id:number){
+        return instance.get(`api/employer/${id}`)
+    },
+    updateEmp(data: ProfileEmpForm){
+        return instance.post('api/employer/update', {
+            id: data.id,
+            email: data.email,
+            login: data.login,
+            name: data.name,
+            phone: data.phone,
+            short_name: data.short_name
+        })
+    },
+    updateApl(data: ProfileAplForm){
+        return instance.post('api/applicant/update', {
+            id: data.id,
+            email: data.email,
+            login: data.login,
+            first_name: data.first_name,
+            phone: data.phone,
+            second_name: data.second_name,
+            surname: data.surname
+        })
     }
 }
 

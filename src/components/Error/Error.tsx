@@ -13,7 +13,7 @@ const Error:React.FC = () => {
                 <button className="notFound__btn" onClick={() => navigate(-1)} type={"button"}>
                     Вернуться назад
                 </button>
-                <svg xmlns="http://www.w3.org/2000/svg"
+                <svg className="notFound__svg" xmlns="http://www.w3.org/2000/svg"
                      viewBox="0 -10 920.32 455.73">
                     <g id="404-animation">
                         <g id="small_text" data-name="small text">

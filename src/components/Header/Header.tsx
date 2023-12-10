@@ -7,6 +7,7 @@ import {RootState} from "../../store/store";
 import BurgerSvg from "../Svg/BurgerSvg";
 import {showMobMenu} from '../../store/appReducer';
 import BurgerSvgClose from "../Svg/BurgerSvgClose";
+import {removeAuthData} from "../../store/authReducer";
 
 const Header: React.FC = () => {
 
@@ -18,6 +19,11 @@ const Header: React.FC = () => {
 
     const toShowMenu = () => {
         dispatch(showMobMenu(!isShowMenu))
+    }
+
+    const unLogin = () => {
+        dispatch(removeAuthData())
+        localStorage.setItem('token', "")
     }
 
     return (
@@ -44,10 +50,19 @@ const Header: React.FC = () => {
                                     </a>
                                 </li>
                                 <li className="menu__item">
-                                    <a className="menu__link" href="#">
+                                    <Link className="menu__link" to="/emp">
                                         Работодателям
-                                    </a>
+                                    </Link>
                                 </li>
+                                {
+                                    width < 769 && isAuth ? (
+                                        <li className="menu__item">
+                                            <button className="menu__link menu__link_exit" onClick={unLogin}>
+                                                Выйти
+                                            </button>
+                                        </li>
+                                    ) : ""
+                                }
                             </ul>
                         </nav>
                         <Link className="header__mob-profile" to={PROFILE_PATH}>

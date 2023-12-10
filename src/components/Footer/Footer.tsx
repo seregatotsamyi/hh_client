@@ -31,9 +31,9 @@ const Footer: React.FC = () => {
                             </a>
                         </li>
                         <li className="footer__item">
-                            <a className="footer__link" href="#">
+                            <Link className="footer__link" to="/emp">
                                 Работдателям
-                            </a>
+                            </Link>
                         </li>
                     </ul>
 
@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
 
                 </div>
                 <div className="footer__copyright">
-                    Разработано <a href="https://t.me/seregatot">@seregatot</a>
+                    Разработано <Link to="https://t.me/seregatot">@seregatot</Link>
                 </div>
             </div>
         </footer>

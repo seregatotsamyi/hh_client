@@ -32,7 +32,7 @@ export interface RegistrationFormApplicantType {
     password: string
     passwordSecond: string
     email: string | null
-    check: boolean,
+    check: boolean
     role: string
 }
 
@@ -57,3 +57,27 @@ export interface loginFormType {
     role: string
 }
 export type typeRoll = typeof ROLE_EMP | typeof ROLE_APL
+
+export interface ProfileEmpForm{
+    login: string | null
+    role: string
+    name: string | null
+    email: string | null
+    short_name: string | null
+    phone: string | null
+    id: number | null
+}
+export type getUserType = {
+    role: string
+    id: number
+}
+export interface ProfileAplForm {
+    login: string | null
+    role: string
+    first_name: string | null
+    email: string | null
+    second_name: string | null
+    phone: string | null
+    surname: string | null
+    id: number | null
+}

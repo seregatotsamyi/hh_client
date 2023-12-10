@@ -38,7 +38,7 @@ export const {loadingStatus, setWidth, showMobMenu} = appReducer.actions
 
 
 export const initializeApp = () => async (dispatch: any) => {
-
+    dispatch(loadingStatus(true))
     try {
         const response = await authAPI.me()
         const jwt: SetAuthUserDataJWTType = jwtDecode(response.data.token)
