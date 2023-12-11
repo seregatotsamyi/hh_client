@@ -47,159 +47,159 @@ const ProfileApl: React.FC = () => {
     }
 
     return (
-        <div className="profile__content">
-            <form className="profile__date" onSubmit={handleSubmit(onSubmit)}>
-                <ul className="profile__info">
-                    <li className="profile__info-item">
-                        <span>Имя: </span>
-                        <span>{applicant.first_name || "Ошибка"}</span>
-                    </li>
-                    <li className="profile__info-item">
-                        <span>Фамилия: </span>
-                        <span>{applicant.second_name || "Ошибка"}</span>
-                    </li>
-                    <li className="profile__info-item">
-                        <span>Отчество: </span>
-                        <span>{applicant.surname || "Ошибка"}</span>
-                    </li>
-                    {
-                        applicant.email !== null ? (
-                            <li className="profile__info-item">
-                                <span>Email: </span>
-                                <span>{applicant.email}</span>
-                            </li>
-                        ) : ""
-                    }
 
-                </ul>
-                <ul className="profile__list-form">
-                    <li className="profile__form-item">
-                        <div className={`login__input input ${errors.first_name ? "_error" : ""}`}>
-                            <div className="input__input-wrap">
-                                <label className="input__label" htmlFor="first_name">
-                                    Имя
-                                </label>
-                                <input className="input__input" id="first_name" {...register("first_name", nameField2)}
-                                       type="text" disabled={!editMode}/>
-                            </div>
-                            {
-                                errors.first_name && (
-                                    <div className="input__error">
-                                        {errors.first_name.message}
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </li>
-                    <li className="profile__form-item">
-                        <div className={`login__input input ${errors.second_name ? "_error" : ""}`}>
-                            <div className="input__input-wrap">
-                                <label className="input__label" htmlFor="second_name">
-                                    Фамилия
-                                </label>
-                                <input className="input__input" id="second_name" {...register("second_name", nameField2)}
-                                       type="text" disabled={!editMode}/>
-                            </div>
-                            {
-                                errors.second_name && (
-                                    <div className="input__error">
-                                        {errors.second_name.message}
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </li>
-                    <li className="profile__form-item">
-                        <div className={`login__input input ${errors.surname ? "_error" : ""}`}>
-                            <div className="input__input-wrap">
-                                <label className="input__label" htmlFor="surname">
-                                    Отчество
-                                </label>
-                                <input className="input__input" id="surname" {...register("surname", nameField2)}
-                                       type="text" disabled={!editMode}/>
-                            </div>
-                            {
-                                errors.surname && (
-                                    <div className="input__error">
-                                        {errors.surname.message}
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </li>
-                    <li className="profile__form-item">
-                        <div className={`login__input input ${errors.login ? "_error" : ""}`}>
-                            <div className="input__input-wrap">
-                                <label className="input__label" htmlFor="login">
-                                    Логин
-                                </label>
-                                <input className="input__input" id="login" {...register("login", loginField)}
-                                       type="text" disabled={!editMode}/>
-                            </div>
-                            {
-                                errors.login && (
-                                    <div className="input__error">
-                                        {errors.login.message}
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </li>
-                    <li className="profile__form-item">
-                        <div className={`login__input input ${errors.email ? "_error" : ""}`}>
-                            <div className="input__input-wrap">
-                                <label className="input__label" htmlFor="email">
-                                    Email
-                                </label>
-                                <input className="input__input" id="email" {...register("email", emailField)}
-                                       type="text" disabled={!editMode}/>
-                            </div>
-                            {
-                                errors.email && (
-                                    <div className="input__error">
-                                        {errors.email.message}
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </li>
-                    <li className="profile__form-item">
-                        <div className={`login__input input ${errors.phone ? "_error" : ""}`}>
-                            <div className="input__input-wrap">
-                                <label className="input__label" htmlFor="phone">
-                                    Телефон
-                                </label>
-                                <input className="input__input" id="phone" {...register("phone", phoneField)}
-                                       type="text" disabled={!editMode}/>
-                            </div>
-                            {
-                                errors.phone && (
-                                    <div className="input__error">
-                                        {errors.phone.message}
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </li>
-
-
-                </ul>
+        <form className="profile__date" onSubmit={handleSubmit(onSubmit)}>
+            <ul className="profile__info">
+                <li className="profile__info-item">
+                    <span>Имя: </span>
+                    <span>{applicant.first_name || "Ошибка"}</span>
+                </li>
+                <li className="profile__info-item">
+                    <span>Фамилия: </span>
+                    <span>{applicant.second_name || "Ошибка"}</span>
+                </li>
+                <li className="profile__info-item">
+                    <span>Отчество: </span>
+                    <span>{applicant.surname || "Ошибка"}</span>
+                </li>
                 {
-                    error !== null ? (
-                        <div className={"response"}>
-                            {error}
-                        </div>
+                    applicant.email !== null ? (
+                        <li className="profile__info-item">
+                            <span>Email: </span>
+                            <span>{applicant.email}</span>
+                        </li>
                     ) : ""
                 }
 
-                <button className={`profile__btn btn ${editMode ? "" : " _hide"}`} type="submit">
-                    Сохранить
-                </button>
-                <button className={`profile__btn btn ${editMode ? " _hide" : ""}`} onClick={onEditMode} type="button">
-                    Редактировать
-                </button>
-            </form>
-        </div>
+            </ul>
+            <ul className="profile__list-form">
+                <li className="profile__form-item">
+                    <div className={`login__input input ${errors.first_name ? "_error" : ""}`}>
+                        <div className="input__input-wrap">
+                            <label className="input__label" htmlFor="first_name">
+                                Имя
+                            </label>
+                            <input className="input__input" id="first_name" {...register("first_name", nameField2)}
+                                   type="text" disabled={!editMode}/>
+                        </div>
+                        {
+                            errors.first_name && (
+                                <div className="input__error">
+                                    {errors.first_name.message}
+                                </div>
+                            )
+                        }
+                    </div>
+                </li>
+                <li className="profile__form-item">
+                    <div className={`login__input input ${errors.second_name ? "_error" : ""}`}>
+                        <div className="input__input-wrap">
+                            <label className="input__label" htmlFor="second_name">
+                                Фамилия
+                            </label>
+                            <input className="input__input" id="second_name" {...register("second_name", nameField2)}
+                                   type="text" disabled={!editMode}/>
+                        </div>
+                        {
+                            errors.second_name && (
+                                <div className="input__error">
+                                    {errors.second_name.message}
+                                </div>
+                            )
+                        }
+                    </div>
+                </li>
+                <li className="profile__form-item">
+                    <div className={`login__input input ${errors.surname ? "_error" : ""}`}>
+                        <div className="input__input-wrap">
+                            <label className="input__label" htmlFor="surname">
+                                Отчество
+                            </label>
+                            <input className="input__input" id="surname" {...register("surname", nameField2)}
+                                   type="text" disabled={!editMode}/>
+                        </div>
+                        {
+                            errors.surname && (
+                                <div className="input__error">
+                                    {errors.surname.message}
+                                </div>
+                            )
+                        }
+                    </div>
+                </li>
+                <li className="profile__form-item">
+                    <div className={`login__input input ${errors.login ? "_error" : ""}`}>
+                        <div className="input__input-wrap">
+                            <label className="input__label" htmlFor="login">
+                                Логин
+                            </label>
+                            <input className="input__input" id="login" {...register("login", loginField)}
+                                   type="text" disabled={!editMode}/>
+                        </div>
+                        {
+                            errors.login && (
+                                <div className="input__error">
+                                    {errors.login.message}
+                                </div>
+                            )
+                        }
+                    </div>
+                </li>
+                <li className="profile__form-item">
+                    <div className={`login__input input ${errors.email ? "_error" : ""}`}>
+                        <div className="input__input-wrap">
+                            <label className="input__label" htmlFor="email">
+                                Email
+                            </label>
+                            <input className="input__input" id="email" {...register("email", emailField)}
+                                   type="text" disabled={!editMode}/>
+                        </div>
+                        {
+                            errors.email && (
+                                <div className="input__error">
+                                    {errors.email.message}
+                                </div>
+                            )
+                        }
+                    </div>
+                </li>
+                <li className="profile__form-item">
+                    <div className={`login__input input ${errors.phone ? "_error" : ""}`}>
+                        <div className="input__input-wrap">
+                            <label className="input__label" htmlFor="phone">
+                                Телефон
+                            </label>
+                            <input className="input__input" id="phone" {...register("phone", phoneField)}
+                                   type="text" disabled={!editMode}/>
+                        </div>
+                        {
+                            errors.phone && (
+                                <div className="input__error">
+                                    {errors.phone.message}
+                                </div>
+                            )
+                        }
+                    </div>
+                </li>
+
+
+            </ul>
+            {
+                error !== null ? (
+                    <div className={"response"}>
+                        {error}
+                    </div>
+                ) : ""
+            }
+
+            <button className={`profile__btn btn ${editMode ? "" : " _hide"}`} type="submit">
+                Сохранить
+            </button>
+            <button className={`profile__btn btn ${editMode ? " _hide" : ""}`} onClick={onEditMode} type="button">
+                Редактировать
+            </button>
+        </form>
+
     );
 };
 

@@ -32,7 +32,9 @@ const Profile: React.FC = () => {
 
                         <Aside/>
 
-                        <Outlet/>
+                        <div className="profile__content">
+                            <Outlet/>
+                        </div>
 
                     </div>
 
