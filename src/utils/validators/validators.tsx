@@ -66,3 +66,10 @@ export const numberField = {
         message: "Только цифры"
     }
 }
+export const numberAgeField = {
+    required: "Поле обязательно для заполнение",
+    pattern: {
+        value: /^[0-9]+$/g,
+        message: "Только цифры"
+    }
+}

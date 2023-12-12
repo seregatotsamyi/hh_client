@@ -1,10 +1,11 @@
+import {ConfigProvider} from 'antd';
+import ru_RU from 'antd/locale/ru_RU';
 import React from 'react';
 import {useSelector} from "react-redux";
 import {Navigate, Outlet} from 'react-router-dom';
 import {RootState} from "../../store/store";
 import {LOGIN_PATH} from '../../utils/consts';
 import Aside from "../Aside/Aside";
-
 
 
 const Profile: React.FC = () => {
@@ -33,7 +34,9 @@ const Profile: React.FC = () => {
                         <Aside/>
 
                         <div className="profile__content">
-                            <Outlet/>
+                            <ConfigProvider locale={ru_RU}>
+                                <Outlet/>
+                            </ConfigProvider>
                         </div>
 
                     </div>

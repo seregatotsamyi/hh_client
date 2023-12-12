@@ -56,9 +56,10 @@ export interface loginFormType {
     password: string
     role: string
 }
+
 export type typeRoll = typeof ROLE_EMP | typeof ROLE_APL
 
-export interface ProfileEmpForm{
+export interface ProfileEmpForm {
     login: string | null
     role: string
     name: string | null
@@ -67,10 +68,12 @@ export interface ProfileEmpForm{
     phone: string | null
     id: number | null
 }
+
 export type getUserType = {
     role: string
     id: number
 }
+
 export interface ProfileAplForm {
     login: string | null
     role: string
@@ -80,4 +83,18 @@ export interface ProfileAplForm {
     phone: string | null
     surname: string | null
     id: number | null
+}
+
+export interface createVacancyFormType {
+    name: string,
+    age_lower: number
+    age_upper: number
+    payment_lower: number
+    payment_upper: number
+    registration_work_book: boolean
+    availability_social_package: boolean
+    communication_skills: boolean
+    //date: string
+    start_date: string
+    end_date: string
 }
