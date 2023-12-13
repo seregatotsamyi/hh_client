@@ -23,7 +23,8 @@ export interface InitialStateType {
         phone: string | null
         surname: string | null
     },
-    response: string | null
+    response: string | null,
+
 }
 
 const initialState: InitialStateType = {
@@ -42,7 +43,8 @@ const initialState: InitialStateType = {
         phone: null,
         surname: null
     },
-    response: null
+    response: null,
+
 }
 
 export const userReducer = createSlice({

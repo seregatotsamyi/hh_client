@@ -94,7 +94,10 @@ export interface createVacancyFormType {
     registration_work_book: boolean
     availability_social_package: boolean
     communication_skills: boolean
-    //date: string
     start_date: string
     end_date: string
+    gender_id: number
+    education_id: number
+    duties_array: Array<string>
+    kind_activities_array: Array<string>
 }

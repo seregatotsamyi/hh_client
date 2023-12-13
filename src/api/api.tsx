@@ -54,22 +54,22 @@ export const authAPI = {
 }
 
 export const addressAPI = {
-    getSettlements(stroke:string){
+    getSettlements(stroke: string) {
         return instance.get(`api/address/settlements/${stroke}`)
     },
-    getStreet(stroke:string){
+    getStreet(stroke: string) {
         return instance.get(`api/address/street/${stroke}`)
     }
 }
 
 export const userAPI = {
-    getApl(id:number){
+    getApl(id: number) {
         return instance.get(`api/applicant/${id}`)
     },
-    getEmp(id:number){
+    getEmp(id: number) {
         return instance.get(`api/employer/${id}`)
     },
-    updateEmp(data: ProfileEmpForm){
+    updateEmp(data: ProfileEmpForm) {
         return instance.post('api/employer/update', {
             id: data.id,
             email: data.email,
@@ -79,7 +79,7 @@ export const userAPI = {
             short_name: data.short_name
         })
     },
-    updateApl(data: ProfileAplForm){
+    updateApl(data: ProfileAplForm) {
         return instance.post('api/applicant/update', {
             id: data.id,
             email: data.email,
@@ -89,6 +89,36 @@ export const userAPI = {
             second_name: data.second_name,
             surname: data.surname
         })
+    },
+    getGender(id: number | null = null) {
+        if (id) {
+            return instance.get(`api/gender/${id}`)
+        } else {
+            return instance.get(`api/gender`)
+        }
+
+    },
+    getEducation(id: number | null = null) {
+        if (id) {
+            return instance.get(`api/education/${id}`)
+        } else {
+            return instance.get(`api/education`)
+        }
+
+    },
+    getDuties(id: number | null = null) {
+        if (id) {
+            return instance.get(`api/duties/${id}`)
+        } else {
+            return instance.get(`api/duties`)
+        }
+    },
+    getActivities(id: number | null = null) {
+        if (id) {
+            return instance.get(`api/activities/${id}`)
+        } else {
+            return instance.get(`api/activities`)
+        }
     }
 }
 

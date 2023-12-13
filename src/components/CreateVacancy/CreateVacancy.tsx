@@ -1,18 +1,62 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from "react-redux";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {createVacancyFormType} from "../../type/type";
+import {useDispatch, useSelector} from "react-redux";
+import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {createVacancyFormType, OptionType} from "../../type/type";
 import {nameField, numberField} from "../../utils/validators/validators";
-import {DatePicker} from 'antd';
-import type {DatePickerProps, RangePickerProps} from 'antd/es/date-picker';
-import dayjs from 'dayjs';
+import {Select} from 'antd';
 import 'dayjs/locale/ru';
-
+import {RootState} from "../../store/store";
+import {LOGIN_PATH} from "../../utils/consts";
+import {Navigate} from "react-router-dom";
+import {
+    fetchOptionsActivities,
+    fetchOptionsDuties,
+    fetchOptionsEducation,
+    fetchOptionsGender
+} from "../../store/inputReducer";
+import DateRange from "../Input/DateRange";
 
 
 const CreateVacancy: React.FC = () => {
 
     const dispatch = useDispatch()
+
+    const userId = useSelector((state: RootState) => state.auth.userId)
+    const optionsGender = useSelector((state: RootState) => state.input.optionsGender)
+    const optionsEducation = useSelector((state: RootState) => state.input.optionsEducation)
+    const optionsGenderSet = optionsGender.map((e: any): OptionType => ({
+        value: e.id,
+        label: e.name,
+    }))
+    const optionsEducationSet = optionsEducation.map((e: any): OptionType => ({
+        value: e.id,
+        label: e.education_value,
+    }))
+
+
+    const [duties, setDuties] = useState<Array<object> >([]);
+    const optionsDuties = useSelector((state: RootState) => state.input.optionsDuties)
+    const optionsDutiesSet = optionsDuties.map((e: any): OptionType => ({
+        value: e.id,
+        label: e.duties_volume,
+    }))
+    const dutiesArray: Array<string> = []
+    for (let i = 0; i < duties.length; i++){
+        //@ts-ignore
+        dutiesArray.push(duties[i].value)
+    }
+
+    const [activities, setActivities] = useState<Array<object> >([]);
+    const optionsActivities = useSelector((state: RootState) => state.input.optionsActivities)
+    const optionsActivitiesSet = optionsActivities.map((e: any): OptionType => ({
+        value: e.id,
+        label: e.name,
+    }))
+    const activitiesArray: Array<string> = []
+    for (let i = 0; i < activities.length; i++){
+        //@ts-ignore
+        activitiesArray.push(activities[i].value)
+    }
 
     const [dateStart, setDateStart] = useState<string | null>(null);
     const [dateEnd, setDateEnd] = useState<string | null>(null);
@@ -23,6 +67,7 @@ const CreateVacancy: React.FC = () => {
             message: "Укажите дату",
         })
     }
+
 
     //Form
     const {
@@ -36,34 +81,81 @@ const CreateVacancy: React.FC = () => {
     } = useForm<createVacancyFormType>()
 
     useEffect(() => {
+        dispatch(fetchOptionsGender(null))
+        dispatch(fetchOptionsEducation(null))
+        dispatch(fetchOptionsDuties(null))
+        dispatch(fetchOptionsActivities(null))
+    }, [])
+
+    useEffect(() => {
         if (dateStart !== null || dateEnd !== null || dateStart !== "" || dateEnd !== "") {
             clearErrors("start_date")
         }
-    }, [dateStart])
+        if (duties.length === 0) {
+            clearErrors("duties_array")
+        }
+        if (activities.length === 0) {
+            clearErrors("kind_activities_array")
+        }
+
+    }, [dateStart, duties, activities])
 
     const onSubmit: SubmitHandler<createVacancyFormType> = (data) => {
         if (dateStart === null || dateEnd === null || dateStart === "" || dateEnd === "") {
             onSetError()
             return
         }
+        if (duties.length === 0 ) {
+            setError("duties_array", {
+                type: "manual",
+                message: "Укажите хотя бы одну обязанность",
+            })
+            return
+        }
+        if (activities.length === 0 ) {
+            setError("kind_activities_array", {
+                type: "manual",
+                message: "Укажите хотя бы одну деятельность",
+            })
+            return
+        }
+
         data.start_date = dateStart
         data.end_date = dateEnd
+        // @ts-ignore
+        data.gender_id = data.gender_id.value
+        // @ts-ignore
+        data.education_id = data.education_id.value
+        data.duties_array = dutiesArray
+        data.kind_activities_array = activitiesArray
         console.log(data)
     }
 
 
     //Data range
-    const {RangePicker} = DatePicker;
-
-    const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-        return current.subtract(-1, 'day') < dayjs().endOf('day')
+    const DataRangeProps = {
+        setDateStart,
+        setDateEnd
     }
 
-    const onChangeDate = (
-        date: DatePickerProps['value'] | RangePickerProps['value'],
-        dateString: [string, string]) => {
-        setDateStart(dateString[0])
-        setDateEnd(dateString[1])
+    if (!userId) {
+        return <Navigate to={LOGIN_PATH}/>
+    }
+
+    //Multiply option
+
+    const handleChange = (value: object[]) => {
+        if (value.length > 0) {
+            clearErrors("duties_array")
+            setDuties(value)
+        }
+    }
+
+    const handleChangeActivities = (value: object[]) => {
+        if (value.length > 0) {
+            clearErrors("kind_activities_array")
+            setActivities(value)
+        }
     }
 
 
@@ -204,9 +296,9 @@ const CreateVacancy: React.FC = () => {
                     <li className="profile__form-item">
 
                         <div className={"create__date"}>
-                            <div className="create__date-wrap">
-                                <RangePicker disabledDate={disabledDate} onChange={onChangeDate}/>
-                            </div>
+
+
+                            <DateRange {...DataRangeProps}/>
 
                             {
                                 errors.start_date && (
@@ -286,7 +378,145 @@ const CreateVacancy: React.FC = () => {
 
 
                     </li>
+                    <li className="profile__form-item">
+                        <div className={`login__input input ${errors.gender_id ? "_error" : ""}`}>
 
+                            <div className="input__input-wrap">
+
+
+                                <label className="input__label" htmlFor="settlements_id">
+                                    Пол
+                                </label>
+                                <Controller
+                                    control={control}
+                                    name='gender_id'
+                                    rules={{
+                                        required: "Поле обязательно для заполнение",
+                                    }}
+                                    render={({field}) => (
+                                        <>
+                                            <Select {...field}
+                                                    className={"ant-custom"}
+                                                    labelInValue
+                                                    options={optionsGenderSet}
+
+                                            />
+
+
+                                        </>
+                                    )}
+                                />
+                            </div>
+                            {
+                                errors.gender_id && (
+                                    <div className="input__error">
+                                        {errors.gender_id.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
+                    <li className="profile__form-item">
+                        <div className={`login__input input ${errors.education_id ? "_error" : ""}`}>
+
+                            <div className="input__input-wrap">
+
+
+                                <label className="input__label" htmlFor="settlements_id">
+                                    Образование
+                                </label>
+                                <Controller
+                                    control={control}
+                                    name='education_id'
+                                    rules={{
+                                        required: "Поле обязательно для заполнение",
+                                    }}
+                                    render={({field}) => (
+                                        <>
+                                            <Select {...field}
+                                                    className={"ant-custom"}
+                                                    labelInValue
+                                                    options={optionsEducationSet}
+                                            />
+
+
+                                        </>
+                                    )}
+                                />
+                            </div>
+                            {
+                                errors.education_id && (
+                                    <div className="input__error">
+                                        {errors.education_id.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
+                    <li className="profile__form-item">
+                        <div className={`login__input input ${errors.duties_array ? "_error" : ""}`}>
+
+                            <div className="input__input-wrap">
+
+
+                                <label className="input__label" htmlFor="duties_array">
+                                    Обязанности
+                                </label>
+
+                                <Select
+                                    className={"ant-custom multiply"}
+                                    labelInValue
+                                    mode="multiple"
+
+                                    onChange={handleChange}
+                                    options={optionsDutiesSet}
+                                    filterOption={(input, option?) =>
+                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                                />
+
+
+                            </div>
+                            {
+                                errors.duties_array && (
+                                    <div className="input__error">
+                                        {errors.duties_array.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
+                    <li className="profile__form-item">
+                        <div className={`login__input input ${errors.kind_activities_array ? "_error" : ""}`}>
+
+                            <div className="input__input-wrap">
+
+
+                                <label className="input__label" htmlFor="kind_activities_array">
+                                     Виды деятельности
+                                </label>
+
+                                <Select
+                                    className={"ant-custom multiply"}
+                                    labelInValue
+                                    mode="multiple"
+
+                                    onChange={handleChangeActivities}
+                                    options={optionsActivitiesSet}
+                                    filterOption={(input, option?) =>
+                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                                />
+
+
+                            </div>
+                            {
+                                errors.kind_activities_array && (
+                                    <div className="input__error">
+                                        {errors.kind_activities_array.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
 
                 </ul>
 
