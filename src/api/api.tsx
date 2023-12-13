@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ProfileAplForm, ProfileEmpForm} from "../type/type";
+import {createVacancyFormType, ProfileAplForm, ProfileEmpForm, vacancyType} from "../type/type";
 
 export const authAPI = {
     me() {
@@ -61,7 +61,11 @@ export const addressAPI = {
         return instance.get(`api/address/street/${stroke}`)
     }
 }
-
+export const vacancyAPI = {
+    createVacancy(data: any) {
+        return instance.post('api/vacancy/create', {...data})
+    },
+}
 export const userAPI = {
     getApl(id: number) {
         return instance.get(`api/applicant/${id}`)

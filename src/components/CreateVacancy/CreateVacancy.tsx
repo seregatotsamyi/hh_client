@@ -6,7 +6,7 @@ import {nameField, numberField} from "../../utils/validators/validators";
 import {Select} from 'antd';
 import 'dayjs/locale/ru';
 import {RootState} from "../../store/store";
-import {LOGIN_PATH} from "../../utils/consts";
+import {LOGIN_PATH, MAIN_PATH} from "../../utils/consts";
 import {Navigate} from "react-router-dom";
 import {
     fetchOptionsActivities,
@@ -15,6 +15,7 @@ import {
     fetchOptionsGender
 } from "../../store/inputReducer";
 import DateRange from "../Input/DateRange";
+import {createVacancy} from "../../store/vacancyReducer";
 
 
 const CreateVacancy: React.FC = () => {
@@ -22,6 +23,7 @@ const CreateVacancy: React.FC = () => {
     const dispatch = useDispatch()
 
     const userId = useSelector((state: RootState) => state.auth.userId)
+    const isSuccessCreateVacancy = useSelector((state: RootState) => state.vacancy.isSuccessCreateVacancy)
     const optionsGender = useSelector((state: RootState) => state.input.optionsGender)
     const optionsEducation = useSelector((state: RootState) => state.input.optionsEducation)
     const optionsGenderSet = optionsGender.map((e: any): OptionType => ({
@@ -34,26 +36,26 @@ const CreateVacancy: React.FC = () => {
     }))
 
 
-    const [duties, setDuties] = useState<Array<object> >([]);
+    const [duties, setDuties] = useState<Array<object>>([]);
     const optionsDuties = useSelector((state: RootState) => state.input.optionsDuties)
     const optionsDutiesSet = optionsDuties.map((e: any): OptionType => ({
         value: e.id,
         label: e.duties_volume,
     }))
     const dutiesArray: Array<string> = []
-    for (let i = 0; i < duties.length; i++){
+    for (let i = 0; i < duties.length; i++) {
         //@ts-ignore
         dutiesArray.push(duties[i].value)
     }
 
-    const [activities, setActivities] = useState<Array<object> >([]);
+    const [activities, setActivities] = useState<Array<object>>([]);
     const optionsActivities = useSelector((state: RootState) => state.input.optionsActivities)
     const optionsActivitiesSet = optionsActivities.map((e: any): OptionType => ({
         value: e.id,
         label: e.name,
     }))
     const activitiesArray: Array<string> = []
-    for (let i = 0; i < activities.length; i++){
+    for (let i = 0; i < activities.length; i++) {
         //@ts-ignore
         activitiesArray.push(activities[i].value)
     }
@@ -105,14 +107,14 @@ const CreateVacancy: React.FC = () => {
             onSetError()
             return
         }
-        if (duties.length === 0 ) {
+        if (duties.length === 0) {
             setError("duties_array", {
                 type: "manual",
                 message: "Укажите хотя бы одну обязанность",
             })
             return
         }
-        if (activities.length === 0 ) {
+        if (activities.length === 0) {
             setError("kind_activities_array", {
                 type: "manual",
                 message: "Укажите хотя бы одну деятельность",
@@ -126,8 +128,10 @@ const CreateVacancy: React.FC = () => {
         data.gender_id = data.gender_id.value
         // @ts-ignore
         data.education_id = data.education_id.value
+        data.emp_id = userId
         data.duties_array = dutiesArray
         data.kind_activities_array = activitiesArray
+        dispatch(createVacancy(data))
         console.log(data)
     }
 
@@ -140,6 +144,10 @@ const CreateVacancy: React.FC = () => {
 
     if (!userId) {
         return <Navigate to={LOGIN_PATH}/>
+    }
+
+    if (isSuccessCreateVacancy) {
+        return <Navigate to={MAIN_PATH}/>
     }
 
     //Multiply option
@@ -492,7 +500,7 @@ const CreateVacancy: React.FC = () => {
 
 
                                 <label className="input__label" htmlFor="kind_activities_array">
-                                     Виды деятельности
+                                    Виды деятельности
                                 </label>
 
                                 <Select

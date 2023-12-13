@@ -87,6 +87,7 @@ export interface ProfileAplForm {
 
 export interface createVacancyFormType {
     name: string,
+    emp_id: number | null,
     age_lower: number
     age_upper: number
     payment_lower: number
@@ -100,4 +101,20 @@ export interface createVacancyFormType {
     education_id: number
     duties_array: Array<string>
     kind_activities_array: Array<string>
+}
+
+export type vacancyType = {
+    id: number
+    emp_id: number
+    name: string
+    age_lower: number
+    age_upper: number
+    payment_lower: number
+    payment_upper: number
+    registration_work_book: boolean
+    availability_social_package: boolean
+    start_date: string
+    end_date: string
+    gender_id: number
+    education_id: number
 }
