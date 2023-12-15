@@ -46,7 +46,7 @@ export const initializeApp = () => async (dispatch: any) => {
         dispatch(setAuthData(dataForReducer))
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response
         console.log(error)
     }
 

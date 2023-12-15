@@ -112,7 +112,7 @@ export const fetchOptionsEducation = (id: number | null) => async (dispatch: any
         dispatch(setOptionsEducation(response))
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response.data
         console.log(error)
     }
 }
@@ -130,7 +130,7 @@ export const fetchOptionsDuties = (id: number | null) => async (dispatch: any) =
         dispatch(setOptionsDuties(response))
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response.data
         console.log(error)
     }
 
@@ -149,7 +149,7 @@ export const fetchOptionsActivities = (id: number | null) => async (dispatch: an
         dispatch(setOptionsActivities(response))
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response.data
         console.log(error)
     }
 

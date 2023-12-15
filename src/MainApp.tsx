@@ -13,7 +13,7 @@ const routers = router;
 const MainApp = () => {
     const dispatch = useDispatch()
 
-
+    const loading = useSelector((state: RootState) => state.app.loading)
 
     useEffect(() => {
         dispatch(setWidth(window.innerWidth))
@@ -23,6 +23,9 @@ const MainApp = () => {
         };
     }, [])
 
+    if(loading){
+        return <Loading/>
+    }
 
 
     return <RouterProvider router={routers}/>

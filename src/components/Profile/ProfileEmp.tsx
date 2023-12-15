@@ -2,11 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
 import {ProfileEmpForm} from "../../type/type";
 import {emailField, loginField, nameField2, phoneField} from "../../utils/validators/validators";
-import { ROLE_EMP} from "../../utils/consts";
+import {ROLE_EMP} from "../../utils/consts";
 import {getUser, updateEmp} from "../../store/userReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {Link} from "react-router-dom";
+import {vacancyAPI} from "../../api/api";
+import {setCountVacancyUser} from "../../store/vacancyReducer";
 
 const ProfileEmp: React.FC = () => {
     const dispatch = useDispatch()
@@ -14,14 +16,18 @@ const ProfileEmp: React.FC = () => {
     const id = useSelector((state: RootState) => state.auth.userId)
     const employer = useSelector((state: RootState) => state.user.employers)
     const error = useSelector((state: RootState) => state.user.response)
+    const countVacancyUser = useSelector((state: RootState) => state.vacancy.isCountVacancyUser)
 
     useEffect(() => {
 
-        if (id !== null && employer.login === null){
+        if (id !== null && employer.login === null) {
             dispatch(getUser({role: ROLE_EMP, id}))
+
         }
 
     }, [])
+
+
 
     const {register, handleSubmit, formState: {errors}} = useForm<ProfileEmpForm>({
         defaultValues: {
@@ -64,7 +70,7 @@ const ProfileEmp: React.FC = () => {
                     }
                     <li className="profile__info-item">
                         <span>Количество размещенных вакансий: </span>
-                        <span><Link to="#">14 </Link> </span>
+                        <span><Link to="#">{countVacancyUser ? countVacancyUser : "0"}</Link> </span>
                     </li>
 
 
@@ -163,14 +169,14 @@ const ProfileEmp: React.FC = () => {
 
                 </ul>
                 {
-                    error !== null ?(
+                    error !== null ? (
                         <div className={"response"}>
                             {error}
                         </div>
                     ) : ""
                 }
 
-                <button className={`profile__btn btn ${editMode ? "" : " _hide"}`}  type="submit">
+                <button className={`profile__btn btn ${editMode ? "" : " _hide"}`} type="submit">
                     Сохранить
                 </button>
                 <button className={`profile__btn btn ${editMode ? " _hide" : ""}`} onClick={onEditMode} type="button">

@@ -1,10 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {userAPI} from '../api/api'
+import {userAPI, vacancyAPI} from '../api/api'
 import {
     getUserType, ProfileAplForm, ProfileEmpForm
 } from "../type/type";
 import {loadingStatus} from "./appReducer";
 import {ROLE_EMP} from "../utils/consts";
+import { setCountVacancyUser} from "./vacancyReducer";
 
 
 export interface InitialStateType {
@@ -79,6 +80,8 @@ export const getUser = (data: getUserType) => async (dispatch: any) => {
         if (role === ROLE_EMP) {
             const response = await userAPI.getEmp(data.id)
             dispatch(setEmployersData(response.data))
+            const CountVacancy = await vacancyAPI.getCountVacancy(response.data.id)
+            dispatch(setCountVacancyUser(CountVacancy.data))
         } else {
             const response = await userAPI.getApl(data.id)
             dispatch(setApplicantData(response.data))

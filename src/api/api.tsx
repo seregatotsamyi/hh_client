@@ -65,6 +65,12 @@ export const vacancyAPI = {
     createVacancy(data: any) {
         return instance.post('api/vacancy/create', {...data})
     },
+    getCountVacancy(id: number | null | string = null) {
+        if (!id){
+            id = ''
+        }
+        return instance.get(`api/vacancy/${id}`)
+    }
 }
 export const userAPI = {
     getApl(id: number) {

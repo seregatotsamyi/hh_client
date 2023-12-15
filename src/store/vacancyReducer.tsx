@@ -1,9 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {authAPI, vacancyAPI} from "../api/api";
-import {setAuthData} from "./authReducer";
-import {jwtDecode} from "jwt-decode";
+import {vacancyAPI} from "../api/api";
 import {createVacancyFormType, vacancyType} from '../type/type';
-import {AxiosResponse} from 'axios';
 import {loadingStatus} from "./appReducer";
 
 
@@ -23,12 +20,14 @@ export interface InitialStateType {
         gender_id: number
         education_id: number
     } | null
-    isSuccessCreateVacancy: boolean
+    isSuccessCreateVacancy: boolean,
+    isCountVacancyUser: number | null
 }
 
 const initialState: InitialStateType = {
     currentVacancy: null,
-    isSuccessCreateVacancy: false
+    isSuccessCreateVacancy: false,
+    isCountVacancyUser: null
 }
 
 export const vacancyReducer = createSlice({
@@ -40,24 +39,27 @@ export const vacancyReducer = createSlice({
         },
         setIsSuccessCreateVacancy: (state, action: PayloadAction<boolean>) => {
             state.isSuccessCreateVacancy = action.payload
+        },
+        setCountVacancyUser: (state, action: PayloadAction<number>) => {
+            state.isCountVacancyUser = action.payload
         }
 
     }
 })
 
 
-export const {setVacancy, setIsSuccessCreateVacancy} = vacancyReducer.actions
+export const {setVacancy, setIsSuccessCreateVacancy, setCountVacancyUser} = vacancyReducer.actions
 
 
 export const createVacancy = (vacancy: createVacancyFormType) => async (dispatch: any) => {
     dispatch(loadingStatus(true))
-    try {
 
+    try {
         const response = await vacancyAPI.createVacancy(vacancy)
 
         let dataForDispatch: vacancyType = {
             id: response.data.id,
-            emp_id: response.data.emp_id,
+            emp_id: response.data.employer_id,
             name: response.data.name,
             age_lower: response.data.age_lower,
             age_upper: response.data.age_upper,
@@ -72,6 +74,12 @@ export const createVacancy = (vacancy: createVacancyFormType) => async (dispatch
         }
 
         dispatch(setVacancy(dataForDispatch))
+
+        const CountVacancy = await vacancyAPI.getCountVacancy(response.data.employer_id)
+        console.log(CountVacancy.data, response.data.emp_id)
+        dispatch(setCountVacancyUser(CountVacancy.data))
+
+
         dispatch(setIsSuccessCreateVacancy(true))
 
     } catch (err: any) {
@@ -79,7 +87,21 @@ export const createVacancy = (vacancy: createVacancyFormType) => async (dispatch
         console.log(error)
     }
     dispatch(loadingStatus(false))
+}
 
+export const setCountVacancy = (id: number | null = null) => async (dispatch: any) => {
+    dispatch(loadingStatus(true))
+
+    try {
+        const response = await vacancyAPI.getCountVacancy(id)
+
+        dispatch(setCountVacancyUser(response.data))
+
+    } catch (err: any) {
+        const error = err.response.data.message
+        console.log(error)
+    }
+    dispatch(loadingStatus(false))
 }
 
 
