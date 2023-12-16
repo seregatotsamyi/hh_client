@@ -5,7 +5,7 @@ import {
     CREATE_VACANCY_PATH,
     ERROR_PATH,
     LOGIN_PATH,
-    MAIN_PATH,
+    MAIN_PATH, PROFILE_LIST_VACANCY,
     PROFILE_PATH,
     REGISTRATION_PATH
 } from "./utils/consts";
@@ -15,6 +15,7 @@ import {App} from "./components/App/App";
 import Profile from "./components/Profile/Profile";
 import Error from "./components/Error/Error";
 import ProfileSettings from "./components/Profile/ProfileSettings";
+import ProfileVacancy from "./components/ProfileVacancy/ProfileVacancy";
 
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
                     {
                         path: CREATE_VACANCY_PATH,
                         element: <CreateVacancy/>
+                    },
+                    {
+                        path: PROFILE_LIST_VACANCY,
+                        element: <ProfileVacancy/>
                     }]
             },
         ],

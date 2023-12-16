@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
 import {ProfileEmpForm} from "../../type/type";
 import {emailField, loginField, nameField2, phoneField} from "../../utils/validators/validators";
-import {ROLE_EMP} from "../../utils/consts";
+import {PROFILE_LIST_VACANCY, ROLE_EMP} from "../../utils/consts";
 import {getUser, updateEmp} from "../../store/userReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
@@ -70,7 +70,7 @@ const ProfileEmp: React.FC = () => {
                     }
                     <li className="profile__info-item">
                         <span>Количество размещенных вакансий: </span>
-                        <span><Link to="#">{countVacancyUser ? countVacancyUser : "0"}</Link> </span>
+                        <span><Link to={PROFILE_LIST_VACANCY}>{countVacancyUser ? countVacancyUser : "0"}</Link> </span>
                     </li>
 
 

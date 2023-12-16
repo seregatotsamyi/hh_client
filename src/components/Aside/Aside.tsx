@@ -1,6 +1,13 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-import {CREATE_VACANCY_PATH, LOGIN_PATH, MAIN_PATH, PROFILE_PATH, ROLE_EMP} from '../../utils/consts';
+import {
+    CREATE_VACANCY_PATH,
+    LOGIN_PATH,
+    MAIN_PATH,
+    PROFILE_LIST_VACANCY,
+    PROFILE_PATH,
+    ROLE_EMP
+} from '../../utils/consts';
 import {removeAuthData} from "../../store/authReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
@@ -31,7 +38,7 @@ const Aside: React.FC = () => {
                                 <li className="profile__item">
                                     <NavLink
                                         className={({isActive}) => (isActive ? "profile__link _active" : "profile__link")}
-                                        to={MAIN_PATH}>
+                                        to={PROFILE_LIST_VACANCY}>
                                         Список ваших вакансий
                                     </NavLink>
                                 </li>
