@@ -26,9 +26,9 @@ const Footer: React.FC = () => {
 
                     <ul className="footer__list">
                         <li className="footer__item">
-                            <a className="footer__link" href="#">
+                            <Link className="footer__link" to={MAIN_PATH}>
                                 Соискателям
-                            </a>
+                            </Link>
                         </li>
                         <li className="footer__item">
                             <Link className="footer__link" to="/emp">

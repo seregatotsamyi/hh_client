@@ -24,8 +24,10 @@ export interface InitialStateType {
     isCountVacancyUser: number | null
     pageSize: number
     currentPage: number
-    vacancy: Array<object> | null
+    vacancy: Array<object>
     totalVacancyCount: number | null
+    vacancyItem: any,
+    error: string | null
 }
 
 const initialState: InitialStateType = {
@@ -34,8 +36,10 @@ const initialState: InitialStateType = {
     isCountVacancyUser: null,
     pageSize: 10,
     currentPage: 1,
-    vacancy: null,
-    totalVacancyCount: null
+    vacancy: [],
+    totalVacancyCount: null,
+    vacancyItem: {},
+    error: null
 }
 
 export const vacancyReducer = createSlice({
@@ -61,6 +65,12 @@ export const vacancyReducer = createSlice({
             state.vacancy = action.payload.vacancy
             state.totalVacancyCount = action.payload.totalVacancyCount
         },
+        setVacancyItem: (state, action: PayloadAction<Object>) => {
+            state.vacancyItem = action.payload
+        },
+        setError: (state, action: PayloadAction<string>) => {
+            state.error = action.payload
+        },
 
     }
 })
@@ -72,7 +82,9 @@ export const {
     setCountVacancyUser,
     setPageSize,
     setCurrentPage,
-    setVacancy
+    setVacancy,
+    setVacancyItem,
+    setError
 } = vacancyReducer.actions
 
 
@@ -101,7 +113,6 @@ export const createVacancy = (vacancy: createVacancyFormType) => async (dispatch
         dispatch(setCurrentVacancy(dataForDispatch))
 
         const CountVacancy = await vacancyAPI.getCountVacancy(response.data.employer_id)
-        console.log(CountVacancy.data, response.data.emp_id)
         dispatch(setCountVacancyUser(CountVacancy.data))
 
 
@@ -138,7 +149,7 @@ export const setVacancyAC = (page: number, pageSize: number, userId: number | nu
             totalVacancyCount: response.data.totalCount,
             vacancy: [{}]
         }
-
+        console.log()
         let ArrayVacancy: Array<object> = response.data.vacanceis.map((item: any) => {
             let newItem = {
                 id: item.id,
@@ -146,7 +157,8 @@ export const setVacancyAC = (page: number, pageSize: number, userId: number | nu
                 payment: [item.payment_lower, item.payment_upper],
                 employer: item.employer.name,
                 employerId: item.employer_id,
-                address: item.employer.address.settlement
+                address: item.employer.address.settlement,
+                status: item.status
             }
             return newItem
         })
@@ -165,5 +177,39 @@ export const setVacancyAC = (page: number, pageSize: number, userId: number | nu
     dispatch(loadingStatus(false))
 }
 
+export const setVacancyItemAC = (id: number) => async (dispatch: any) => {
+    dispatch(loadingStatus(true))
+
+    try {
+        const response = await vacancyAPI.getItem(id);
+
+        let ObjForSet = {
+            id: response.data.id,
+            name: response.data.name,
+            payment: [response.data.payment_lower, response.data.payment_upper],
+            employer: response.data.employer.name,
+            employerId: response.data.employer_id,
+            address: response.data.employer.address.settlement.settlement,
+            gender: response.data.gender.name,
+            education: response.data.education.education_value,
+            age: [response.data.age_lower, response.data.age_upper],
+            availability_social_package: response.data.availability_social_package,
+            registration_work_book: response.data.registration_work_book,
+            communication_skills: response.data.communication_skills,
+            activities: response.data.activities,
+            duties: response.data.duties,
+            status: response.data.status
+        }
+        dispatch(setVacancyItem(ObjForSet))
+
+    } catch (err: any) {
+        const error = err.response.data.message
+        if (error){
+            dispatch(setError(error))
+        }
+        console.log(error)
+    }
+    dispatch(loadingStatus(false))
+}
 
 export default vacancyReducer.reducer

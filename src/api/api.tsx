@@ -66,17 +66,20 @@ export const vacancyAPI = {
         return instance.post('api/vacancy/create', {...data})
     },
     getCountVacancy(id: number | null | string = null) {
-        if (!id){
+        if (!id) {
             id = ''
         }
         return instance.get(`api/vacancy/count/${id}`)
     },
-    getVacancy(page:number = 1, count:number = 10, id:number|null = null){
-        if (id){
+    getVacancy(page: number = 1, count: number = 10, id: number | null = null) {
+        if (id) {
             return instance.get(`api/vacancy/?page=${page}&count=${count}&id=${id}`)
         }
         return instance.get(`api/vacancy/?page=${page}&count=${count}`)
-    }
+    },
+    getItem(id: number) {
+        return instance.get(`api/vacancy/item/${id}`)
+    },
 }
 export const userAPI = {
     getApl(id: number) {

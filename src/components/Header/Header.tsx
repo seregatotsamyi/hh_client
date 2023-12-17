@@ -45,9 +45,9 @@ const Header: React.FC = () => {
                         <nav className="menu">
                             <ul className="menu__list">
                                 <li className="menu__item">
-                                    <a className="menu__link" href="#">
+                                    <Link className="menu__link" to={MAIN_PATH}>
                                         Соискателям
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li className="menu__item">
                                     <Link className="menu__link" to="/emp">

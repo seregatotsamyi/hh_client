@@ -6,7 +6,7 @@ import {nameField, numberField} from "../../utils/validators/validators";
 import {Select} from 'antd';
 import 'dayjs/locale/ru';
 import {RootState} from "../../store/store";
-import {LOGIN_PATH, MAIN_PATH} from "../../utils/consts";
+import {LOGIN_PATH, MAIN_PATH, PROFILE_LIST_VACANCY} from "../../utils/consts";
 import {Navigate} from "react-router-dom";
 import {
     fetchOptionsActivities,
@@ -147,7 +147,7 @@ const CreateVacancy: React.FC = () => {
     }
 
     if (isSuccessCreateVacancy) {
-        return <Navigate to={MAIN_PATH}/>
+        return <Navigate to={PROFILE_LIST_VACANCY}/>
     }
 
     //Multiply option
@@ -371,7 +371,7 @@ const CreateVacancy: React.FC = () => {
                                 <input className="input__input _check" type="checkbox" placeholder=""
                                        id="communication_skills" {...register("communication_skills")}/>
                                 <label className="input__label _check" htmlFor="communication_skills">
-                                    Каммуникабельность
+                                    Коммуникабельность
                                 </label>
                             </div>
                             {

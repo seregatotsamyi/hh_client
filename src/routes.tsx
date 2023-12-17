@@ -7,7 +7,7 @@ import {
     LOGIN_PATH,
     MAIN_PATH, PROFILE_LIST_VACANCY,
     PROFILE_PATH,
-    REGISTRATION_PATH
+    REGISTRATION_PATH, REPORT, VACANCY
 } from "./utils/consts";
 import Login from "./components/Login/Login";
 import CreateVacancy from "./components/CreateVacancy/CreateVacancy";
@@ -16,6 +16,9 @@ import Profile from "./components/Profile/Profile";
 import Error from "./components/Error/Error";
 import ProfileSettings from "./components/Profile/ProfileSettings";
 import ProfileVacancy from "./components/ProfileVacancy/ProfileVacancy";
+import VacancyPage from "./components/Vacancy/VacancyPage";
+import VacancyMain from "./components/Vacancy/VacancyMain";
+import Reports from "./components/Reports/Reports";
 
 
 const router = createBrowserRouter([
@@ -43,6 +46,14 @@ const router = createBrowserRouter([
                         element: <ProfileVacancy/>
                     }]
             },
+            {
+                path: `${VACANCY}/:id`,
+                element: <VacancyPage/>,
+            },
+            {
+                path: MAIN_PATH,
+                element: <VacancyMain/>,
+            }
         ],
 
     },
@@ -54,6 +65,10 @@ const router = createBrowserRouter([
     {
         path: REGISTRATION_PATH,
         element: <Login/>
+    },
+    {
+        path: REPORT,
+        element: <Reports/>
     },
     {
         path: ERROR_PATH,
