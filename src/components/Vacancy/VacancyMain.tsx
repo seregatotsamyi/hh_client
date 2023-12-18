@@ -1,14 +1,14 @@
 import React from 'react';
-import {useDispatch} from "react-redux";
-import { Link } from 'react-router-dom';
-import { REPORT } from '../../utils/consts';
+import {useDispatch, useSelector} from "react-redux";
+import {Link} from 'react-router-dom';
+import {REPORT, ROLE_APL} from '../../utils/consts';
 import VacancyList from './VacancyList';
-
+import {RootState} from "../../store/store";
 
 
 const VacancyMain: React.FC = () => {
-    const dispatch = useDispatch()
 
+    const role = useSelector((state: RootState) => state.auth.role)
 
     return (
         <section className="list-vacancy-main">
@@ -17,9 +17,14 @@ const VacancyMain: React.FC = () => {
                     Список вакансий
                 </div>
                 <div className="list-vacancy-main__option">
-                    <Link className="list-vacancy-main__report btn" to={REPORT}>
-                        Сформировать отчеты
-                    </Link>
+                    {
+                        role === ROLE_APL ? (
+                            <Link className="list-vacancy-main__report btn" to={REPORT}>
+                                Сформировать отчеты
+                            </Link>
+                        ) : ""
+                    }
+
 
                 </div>
                 <div className="list-vacancy-main__inner">

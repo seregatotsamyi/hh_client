@@ -53,7 +53,11 @@ const router = createBrowserRouter([
             {
                 path: MAIN_PATH,
                 element: <VacancyMain/>,
-            }
+            },
+            {
+                path: REPORT,
+                element: <Reports/>
+            },
         ],
 
     },
@@ -66,10 +70,7 @@ const router = createBrowserRouter([
         path: REGISTRATION_PATH,
         element: <Login/>
     },
-    {
-        path: REPORT,
-        element: <Reports/>
-    },
+
     {
         path: ERROR_PATH,
         element: <Error/>

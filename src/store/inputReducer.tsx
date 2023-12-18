@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {SetOptionsType} from "../type/type";
-import {addressAPI, userAPI} from "../api/api";
-import {loadingStatus} from "./appReducer";
+import {addressAPI, userAPI, vacancyAPI} from "../api/api";
 
 
 export interface InitialStateType {
@@ -11,6 +10,8 @@ export interface InitialStateType {
     optionsEducation: Array<object>
     optionsDuties: Array<object>
     optionsActivities: Array<object>
+    optionsPosts: Array<object>
+
 }
 
 const initialState: InitialStateType = {
@@ -19,7 +20,8 @@ const initialState: InitialStateType = {
     optionsGender: [],
     optionsEducation: [],
     optionsDuties: [],
-    optionsActivities: []
+    optionsActivities: [],
+    optionsPosts: []
 }
 
 export const inputReducer = createSlice({
@@ -44,6 +46,9 @@ export const inputReducer = createSlice({
             },
             setOptionsActivities: (state, action: PayloadAction<SetOptionsType>) => {
                 state.optionsActivities = action.payload.data
+            },
+            setOptionsPosts: (state, action: PayloadAction<SetOptionsType>) => {
+                state.optionsPosts = action.payload.data
             }
         }
 })
@@ -55,7 +60,8 @@ export const {
     setOptionsGender,
     setOptionsEducation,
     setOptionsDuties,
-    setOptionsActivities
+    setOptionsActivities,
+    setOptionsPosts
 } = inputReducer.actions
 
 
@@ -79,6 +85,18 @@ export const fetchOptionsStreet = (stroke: string) => async (dispatch: any) => {
 
     } catch (err: any) {
         const error = err.response.data.message
+        console.log(error)
+    }
+}
+
+export const fetchOptionsPosts = (stroke: string) => async (dispatch: any) => {
+    try {
+
+        const response = await vacancyAPI.getPosts(stroke)
+        dispatch(setOptionsPosts(response))
+
+    } catch (err: any) {
+        const error = err.response
         console.log(error)
     }
 }

@@ -4,6 +4,7 @@ import authReducer from "./authReducer";
 import inputReducer from "./inputReducer";
 import userReducer from "./userReducer";
 import vacancyReducer from "./vacancyReducer";
+import reportReducer from "./reportReducer";
 
 
 const middleware = getDefaultMiddleware({
@@ -18,7 +19,8 @@ export const store = configureStore({
         app : appReducer,
         input: inputReducer,
         user: userReducer,
-        vacancy: vacancyReducer
+        vacancy: vacancyReducer,
+        report: reportReducer
     },
     middleware,
     devTools: process.env.NODE_ENV !== 'production',

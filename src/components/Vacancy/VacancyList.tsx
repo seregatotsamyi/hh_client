@@ -22,14 +22,19 @@ const VacancyList: React.FC<VacancyListType> = ({isProfile}: VacancyListType) =>
     const page = useSelector((state: RootState) => state.vacancy.currentPage)
     const pageSize = useSelector((state: RootState) => state.vacancy.pageSize)
 
-    if (totalVacancyCount === null) {
+    if (totalVacancyCount === null ) {
         totalVacancyCount = 1
     }
 
     useEffect(() => {
 
-        if (vacancyList.length === 0) {
-            dispatch(setVacancyAC(page, pageSize, userId))
+        if (vacancyList.length === 0 && totalVacancyUserCount === null) {
+            if (!isProfile){
+                dispatch(setVacancyAC(page, pageSize, null))
+            } else {
+                dispatch(setVacancyAC(page, pageSize, userId))
+            }
+
         }
 
     }, [vacancyList, page, pageSize,totalVacancyUserCount])

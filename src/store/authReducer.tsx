@@ -74,7 +74,7 @@ export const loginApl = (data: loginFormType) => async (dispatch: any) => {
         dispatch(setAuthData(dataForReducer))
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response
         dispatch(setError({error}))
     }
 }
@@ -90,7 +90,7 @@ export const loginEmp = (data: loginFormType) => async (dispatch: any) => {
         dispatch(setAuthData(dataForReducer))
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response
         dispatch(setError({error}))
     }
 }
@@ -105,7 +105,7 @@ export const registerApl = (data: RegistrationFormApplicantType) => async (dispa
         dispatch(isSuccessRegistration())
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response
         dispatch(setError({error}))
     }
 }
@@ -130,7 +130,7 @@ export const registerEmp = (data: RegistrationFormEmployerType) => async (dispat
         dispatch(isSuccessRegistration())
 
     } catch (err: any) {
-        const error = err.response.data.message
+        const error = err.response
         dispatch(setError({error}))
     }
 }

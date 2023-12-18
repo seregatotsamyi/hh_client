@@ -118,3 +118,9 @@ export type vacancyType = {
     gender_id: number
     education_id: number
 }
+
+export interface ReportOneType {
+    post: string
+    start_date: string
+    end_date: string
+}
