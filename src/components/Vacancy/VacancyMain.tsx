@@ -17,13 +17,10 @@ const VacancyMain: React.FC = () => {
                     Список вакансий
                 </div>
                 <div className="list-vacancy-main__option">
-                    {
-                        role === ROLE_APL ? (
-                            <Link className="list-vacancy-main__report btn" to={REPORT}>
-                                Сформировать отчеты
-                            </Link>
-                        ) : ""
-                    }
+
+                    <Link className="list-vacancy-main__report btn" to={REPORT}>
+                        Сформировать отчеты
+                    </Link>
 
 
                 </div>

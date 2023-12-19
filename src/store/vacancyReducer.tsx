@@ -24,7 +24,7 @@ export interface InitialStateType {
     isCountVacancyUser: number | null
     pageSize: number
     currentPage: number
-    vacancy: Array<object>
+    vacancy: Array<object> | null
     totalVacancyCount: number | null
     vacancyItem: any,
     error: string | null
@@ -36,7 +36,7 @@ const initialState: InitialStateType = {
     isCountVacancyUser: null,
     pageSize: 10,
     currentPage: 1,
-    vacancy: [],
+    vacancy: null,
     totalVacancyCount: null,
     vacancyItem: {},
     error: null
@@ -149,7 +149,8 @@ export const setVacancyAC = (page: number, pageSize: number, userId: number | nu
             totalVacancyCount: response.data.totalCount,
             vacancy: [{}]
         }
-        console.log()
+
+
         let ArrayVacancy: Array<object> = response.data.vacanceis.map((item: any) => {
             let newItem = {
                 id: item.id,
@@ -198,7 +199,9 @@ export const setVacancyItemAC = (id: number) => async (dispatch: any) => {
             communication_skills: response.data.communication_skills,
             activities: response.data.activities,
             duties: response.data.duties,
-            status: response.data.status
+            status: response.data.status,
+            start_date: response.data.start_date,
+            end_date: response.data.end_date
         }
         dispatch(setVacancyItem(ObjForSet))
 

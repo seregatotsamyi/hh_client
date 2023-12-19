@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {LOGIN_PATH, ROLE_APL} from "../../utils/consts";
@@ -14,6 +14,8 @@ export interface VacancyListType extends React.HTMLProps<HTMLDivElement> {
 const VacancyList: React.FC<VacancyListType> = ({isProfile}: VacancyListType) => {
     const dispatch = useDispatch()
 
+    //const [load, setLoad] = useState<boolean>(true);
+
     const userId = useSelector((state: RootState) => state.auth.userId)
     const role = useSelector((state: RootState) => state.auth.role)
     const vacancyList = useSelector((state: RootState) => state.vacancy.vacancy)
@@ -28,19 +30,24 @@ const VacancyList: React.FC<VacancyListType> = ({isProfile}: VacancyListType) =>
 
     useEffect(() => {
 
-        if (vacancyList.length === 0 && totalVacancyUserCount === null) {
+        if (vacancyList === null && totalVacancyUserCount === null) {
             if (!isProfile){
                 dispatch(setVacancyAC(page, pageSize, null))
             } else {
                 dispatch(setVacancyAC(page, pageSize, userId))
             }
 
+
         }
 
-    }, [vacancyList, page, pageSize,totalVacancyUserCount])
+    }, [vacancyList, page, pageSize,totalVacancyUserCount,isProfile])
 
     const onSetPage: PaginationProps['onChange'] = (page) => {
-        dispatch(setVacancyAC(page, pageSize, userId))
+        if (!isProfile){
+            dispatch(setVacancyAC(page, pageSize, null))
+        } else {
+            dispatch(setVacancyAC(page, pageSize, userId))
+        }
     };
 
     if (role === ROLE_APL && isProfile === true) {
@@ -51,7 +58,7 @@ const VacancyList: React.FC<VacancyListType> = ({isProfile}: VacancyListType) =>
         <div className="listVacancy">
             <ul className="listVacancy__list">
                 {
-                    vacancyList.length === 0 ? "Нет вакансий" : (
+                    vacancyList === null || vacancyList.length === 0 ? "Нет вакансий" : (
                         vacancyList.map((item: any) =>
                             <VacancyItem
                                 key={item.id}
@@ -68,7 +75,7 @@ const VacancyList: React.FC<VacancyListType> = ({isProfile}: VacancyListType) =>
             </ul>
             <div className="listVacancy__pagination">
                 {
-                    vacancyList.length !== 0 && <Pagination defaultCurrent={page}
+                    vacancyList === null || vacancyList.length !== 0 && <Pagination defaultCurrent={page}
                                                             total={totalVacancyCount}
                                                             defaultPageSize={pageSize}
                                                             showSizeChanger={false}

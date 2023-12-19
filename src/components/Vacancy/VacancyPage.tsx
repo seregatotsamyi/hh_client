@@ -98,6 +98,12 @@ const VacancyPage: React.FC = () => {
                                 )
                             })}</span>
                             </li>
+                            <li className="vacancy__item">
+                                <span>Дата размещение:  </span> <span>{vacancyItem.start_date} </span>
+                            </li>
+                            <li className="vacancy__item">
+                                <span>Дата снятия:  </span> <span>{vacancyItem.end_date} </span>
+                            </li>
                         </ul>
                         <button className="vacancy__btn btn">
                             Откликнуться
