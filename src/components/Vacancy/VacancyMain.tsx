@@ -7,7 +7,7 @@ import {RootState} from "../../store/store";
 
 
 const VacancyMain: React.FC = () => {
-
+    const isAuth = useSelector((state: RootState) => state.auth.isAuth)
     const role = useSelector((state: RootState) => state.auth.role)
 
     return (
@@ -18,9 +18,14 @@ const VacancyMain: React.FC = () => {
                 </div>
                 <div className="list-vacancy-main__option">
 
-                    <Link className="list-vacancy-main__report btn" to={REPORT}>
-                        Сформировать отчеты
-                    </Link>
+                    {
+                        isAuth && (
+                            <Link className="list-vacancy-main__report btn" to={REPORT}>
+                                Сформировать отчеты
+                            </Link>
+                        )
+                    }
+
 
 
                 </div>

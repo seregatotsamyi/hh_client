@@ -134,7 +134,7 @@ const ProfileApl: React.FC = () => {
                                 Логин
                             </label>
                             <input className="input__input" id="login" {...register("login", loginField)}
-                                   type="text" disabled={!editMode}/>
+                                   type="text" disabled={true}/>
                         </div>
                         {
                             errors.login && (

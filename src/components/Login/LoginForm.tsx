@@ -33,9 +33,9 @@ const LoginForm: React.FC = () => {
             Авторизация
         </div>
 
-        <ul className={`login__input input ${errors.login ? "_error" : ""}`}>
+        <ul className="login__grid">
             <li className="login__row">
-                <div className="login__input input">
+                <div className={`login__input input ${errors.login ? "_error" : ""}`}>
                     <div className="input__input-wrap">
                     <label className="input__label" htmlFor="login">
                         Логин
