@@ -80,6 +80,9 @@ export const vacancyAPI = {
     getItem(id: number) {
         return instance.get(`api/vacancy/item/${id}`)
     },
+    deleteItem(id: number) {
+        return instance.get(`api/vacancy/delete/${id}`)
+    },
     getPosts(stroke: string) {
         return instance.get(`api/vacancy/post/${stroke}`)
     }

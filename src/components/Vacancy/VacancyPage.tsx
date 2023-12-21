@@ -1,24 +1,27 @@
 import React, {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import {Navigate, useNavigate} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
 import {RootState} from "../../store/store";
-import {setVacancyItemAC} from "../../store/vacancyReducer";
+import {deleteItem, setIsDeleted, setVacancyItemAC} from "../../store/vacancyReducer";
 import Loading from '../Loading/Loading';
+import {MAIN_PATH, PROFILE_PATH} from "../../utils/consts";
 
-//@ts-ignore
+
 const VacancyPage: React.FC = () => {
 
     const dispatch = useDispatch()
     const params = useParams();
     let id = Number(params.id);
 
-
+    const userId = useSelector((state: RootState) => state.auth.userId)
     const vacancyItem = useSelector((state: RootState) => state.vacancy.vacancyItem)
+    const isDeleted = useSelector((state: RootState) => state.vacancy.isDeleted)
 
     const error = useSelector((state: RootState) => state.vacancy.error)
 
     useEffect(() => {
-
+        dispatch(setIsDeleted(false))
         if (!vacancyItem.id && error === null) {
             dispatch(setVacancyItemAC(id))
         }
@@ -28,6 +31,10 @@ const VacancyPage: React.FC = () => {
 
     }, [])
 
+    const deleteVacancy = () => {
+        dispatch(deleteItem(id))
+    }
+
     if (!vacancyItem.name) {
         if (error !== null) {
             return (
@@ -35,6 +42,9 @@ const VacancyPage: React.FC = () => {
             )
         }
         return <Loading/>
+    }
+    if (isDeleted){
+        return <Navigate to={MAIN_PATH}/>
     }
 
     return (
@@ -105,9 +115,17 @@ const VacancyPage: React.FC = () => {
                                 <span>Дата снятия:  </span> <span>{vacancyItem.end_date} </span>
                             </li>
                         </ul>
-                        <button className="vacancy__btn btn">
-                            Откликнуться
-                        </button>
+                        {/*<button className="vacancy__btn btn">*/}
+                        {/*    Откликнуться*/}
+                        {/*</button>*/}
+                        {
+                            vacancyItem.employerId === userId ?  (
+                                <button className="vacancy__btn btn" onClick={deleteVacancy}>
+                                    Удалить
+                                </button>
+                                ) : ""
+
+                        }
                     </div>
                     <div className="vacancy__author-block">
                         <a className="vacancy__author _h3" href="#">

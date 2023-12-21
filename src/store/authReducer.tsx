@@ -147,7 +147,8 @@ export const registerEmp = (data: RegistrationFormEmployerType) => async (dispat
             dispatch(setError({error: "Network Error"}))
         } else {
             const error = err.response.data.message
-            dispatch(setError({error}))
+            console.error(err)
+           // dispatch(setError({error}))
         }
     }
 }

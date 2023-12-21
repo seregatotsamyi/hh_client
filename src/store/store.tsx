@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware, combineReducers } from "@reduxjs/toolkit";
 import appReducer from "./appReducer";
 import authReducer from "./authReducer";
 import inputReducer from "./inputReducer";
@@ -7,11 +7,14 @@ import vacancyReducer from "./vacancyReducer";
 import reportReducer from "./reportReducer";
 
 
+
 const middleware = getDefaultMiddleware({
     immutableCheck: false,
     serializableCheck: false,
     thunk: true,
 });
+
+
 
 export const store = configureStore({
     reducer: {
@@ -20,9 +23,10 @@ export const store = configureStore({
         input: inputReducer,
         user: userReducer,
         vacancy: vacancyReducer,
-        report: reportReducer
+        report: reportReducer,
     },
     middleware,
+
     devTools: process.env.NODE_ENV !== 'production',
 })
 

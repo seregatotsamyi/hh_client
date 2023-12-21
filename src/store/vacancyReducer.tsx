@@ -5,6 +5,8 @@ import {loadingStatus} from "./appReducer";
 import {setResponse} from "./userReducer";
 
 
+
+
 export interface InitialStateType {
     currentVacancy: {
         id: number
@@ -27,8 +29,10 @@ export interface InitialStateType {
     currentPage: number
     vacancy: Array<object> | null
     totalVacancyCount: number | null
-    vacancyItem: any,
+    vacancyItem: any
     error: string | null
+    isDeleted: boolean
+
 }
 
 const initialState: InitialStateType = {
@@ -40,7 +44,8 @@ const initialState: InitialStateType = {
     vacancy: null,
     totalVacancyCount: null,
     vacancyItem: {},
-    error: null
+    error: null,
+    isDeleted: false
 }
 
 export const vacancyReducer = createSlice({
@@ -72,6 +77,9 @@ export const vacancyReducer = createSlice({
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload
         },
+        setIsDeleted: (state, action: PayloadAction<boolean>) => {
+            state.isDeleted = action.payload
+        },
 
     }
 })
@@ -85,7 +93,8 @@ export const {
     setCurrentPage,
     setVacancy,
     setVacancyItem,
-    setError
+    setError,
+    setIsDeleted
 } = vacancyReducer.actions
 
 
@@ -220,6 +229,27 @@ export const setVacancyItemAC = (id: number) => async (dispatch: any) => {
         } else {
             const error = err.response.data.message
             dispatch(setError(error))
+        }
+    }
+    dispatch(loadingStatus(false))
+}
+
+export const deleteItem = (id: number) => async (dispatch: any) => {
+    dispatch(loadingStatus(true))
+
+    try {
+
+        const response = await vacancyAPI.deleteItem(id);
+        dispatch(setIsDeleted(true))
+        console.log(1)
+
+    } catch (err: any) {
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            console.log(err)
+           // const error = err.response.data.message
+            //dispatch(setError(error))
         }
     }
     dispatch(loadingStatus(false))
