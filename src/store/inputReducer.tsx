@@ -72,8 +72,12 @@ export const fetchOptionsSettlements = (stroke: string) => async (dispatch: any)
         dispatch(setOptionsSettlements(response))
 
     } catch (err: any) {
-        const error = err.response.data.message
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 }
 
@@ -84,8 +88,12 @@ export const fetchOptionsStreet = (stroke: string) => async (dispatch: any) => {
         dispatch(setOptionsStreet(response))
 
     } catch (err: any) {
-        const error = err.response.data.message
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 }
 
@@ -96,8 +104,12 @@ export const fetchOptionsPosts = (stroke: string) => async (dispatch: any) => {
         dispatch(setOptionsPosts(response))
 
     } catch (err: any) {
-        const error = err.response
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 }
 
@@ -113,8 +125,12 @@ export const fetchOptionsGender = (id: number | null) => async (dispatch: any) =
         dispatch(setOptionsGender(response))
 
     } catch (err: any) {
-        const error = err.response.data.message
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 }
 
@@ -130,8 +146,12 @@ export const fetchOptionsEducation = (id: number | null) => async (dispatch: any
         dispatch(setOptionsEducation(response))
 
     } catch (err: any) {
-        const error = err.response.data
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 }
 
@@ -148,8 +168,12 @@ export const fetchOptionsDuties = (id: number | null) => async (dispatch: any) =
         dispatch(setOptionsDuties(response))
 
     } catch (err: any) {
-        const error = err.response.data
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 
 }
@@ -167,8 +191,12 @@ export const fetchOptionsActivities = (id: number | null) => async (dispatch: an
         dispatch(setOptionsActivities(response))
 
     } catch (err: any) {
-        const error = err.response.data
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 
 }

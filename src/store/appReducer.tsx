@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {authAPI} from "../api/api";
-import {setAuthData} from "./authReducer";
+import {setAuthData, setError} from "./authReducer";
 import {SetAuthUserDataJWTType} from "../type/type";
 import {jwtDecode} from "jwt-decode";
 
@@ -46,8 +46,12 @@ export const initializeApp = () => async (dispatch: any) => {
         dispatch(setAuthData(dataForReducer))
 
     } catch (err: any) {
-        const error = err.response
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 
     dispatch(loadingStatus(false))

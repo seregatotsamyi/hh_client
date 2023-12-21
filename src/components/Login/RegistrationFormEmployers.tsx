@@ -91,7 +91,7 @@ const RegistrationFormEmployers = () => {
                             <label className="input__label" htmlFor="name">
                                 Имя (название)
                             </label>
-                            <input className="input__input" id="name" {...register("name", nameField)} type="text"
+                            <input className="input__input" id="name" {...register("name", nameField2)} type="text"
                                    placeholder='ОАО "Строитель"'/>
                         </div>
                         {

@@ -82,7 +82,7 @@ const ProfileEmp: React.FC = () => {
                                 <label className="input__label" htmlFor="name">
                                     Наименование
                                 </label>
-                                <input className="input__input" id="name" {...register("name", loginField)}
+                                <input className="input__input" id="name" {...register("name", nameField2)}
                                        type="text" disabled={!editMode}/>
                             </div>
                             {

@@ -56,7 +56,12 @@ export const reportOneAC = (post: string, date_start: string, date_end: string) 
         dispatch(changeFlag())
 
     } catch (err: any) {
-        const error = err.response
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
 
     }
 }
@@ -69,7 +74,12 @@ export const reportThreeAC = (date_start: string, date_end: string) => async (di
         dispatch(changeFlag())
 
     } catch (err: any) {
-        const error = err.response
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
 
     }
 }
@@ -86,7 +96,12 @@ export const reportTwoAC = (date_start: string, date_end: string) => async (disp
         dispatch(changeFlag())
 
     } catch (err: any) {
-        const error = err.response
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
 
     }
 }

@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {vacancyAPI} from "../api/api";
 import {createVacancyFormType, vacancyType} from '../type/type';
 import {loadingStatus} from "./appReducer";
+import {setResponse} from "./userReducer";
 
 
 export interface InitialStateType {
@@ -119,8 +120,12 @@ export const createVacancy = (vacancy: createVacancyFormType) => async (dispatch
         dispatch(setIsSuccessCreateVacancy(true))
 
     } catch (err: any) {
-        const error = err.response.data.message
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
     dispatch(loadingStatus(false))
 }
@@ -172,8 +177,12 @@ export const setVacancyAC = (page: number, pageSize: number, userId: number | nu
         dispatch(setVacancy(ObjForSet))
 
     } catch (err: any) {
-        const error = err.response
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
     dispatch(loadingStatus(false))
 }
@@ -206,11 +215,12 @@ export const setVacancyItemAC = (id: number) => async (dispatch: any) => {
         dispatch(setVacancyItem(ObjForSet))
 
     } catch (err: any) {
-        const error = err.response.data.message
-        if (error){
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
             dispatch(setError(error))
         }
-        console.log(error)
     }
     dispatch(loadingStatus(false))
 }

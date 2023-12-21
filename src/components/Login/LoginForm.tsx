@@ -1,10 +1,10 @@
 import React from 'react';
-import {Link, Navigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {REGISTRATION_PATH, ROLE_APL, ROLE_EMP} from "../../utils/consts";
 import {useDispatch, useSelector} from 'react-redux'
 import {SubmitHandler, useForm} from "react-hook-form";
-import {loginFormType, RegistrationFormApplicantType} from "../../type/type";
-import {requiredField} from "../../utils/validators/validators";
+import {loginFormType} from "../../type/type";
+import {loginField, requiredField} from "../../utils/validators/validators";
 import {loginApl, loginEmp} from "../../store/authReducer";
 import {RootState} from "../../store/store";
 
@@ -13,7 +13,7 @@ const LoginForm: React.FC = () => {
 
     const dispatch = useDispatch()
 
-    const {register, handleSubmit} = useForm<RegistrationFormApplicantType>()
+    const {register, handleSubmit, formState: {errors}} = useForm<loginFormType>()
 
     const onSubmit: SubmitHandler<loginFormType> = (data) => {
         if (data.role === ROLE_EMP) {
@@ -26,19 +26,30 @@ const LoginForm: React.FC = () => {
     const error = useSelector((state: RootState) => state.auth.error)
 
 
+
+
     return <form onSubmit={handleSubmit(onSubmit)}>
         <div className="login__title _h2">
             Авторизация
         </div>
 
-        <ul className="login__grid">
+        <ul className={`login__input input ${errors.login ? "_error" : ""}`}>
             <li className="login__row">
                 <div className="login__input input">
+                    <div className="input__input-wrap">
                     <label className="input__label" htmlFor="login">
                         Логин
                     </label>
-                    <input className="input__input" id="login" {...register("login", requiredField)} type="text"
+                    <input className="input__input" id="login" {...register("login", loginField)} type="text"
                            placeholder="Ваш логин"/>
+                    </div>
+                    {
+                        errors.login && (
+                            <div className="input__error">
+                                {errors.login.message}
+                            </div>
+                        )
+                    }
                 </div>
             </li>
             <li className="login__row">
@@ -46,7 +57,7 @@ const LoginForm: React.FC = () => {
                     <label className="input__label" htmlFor="name">
                         Пароль
                     </label>
-                    <input className="input__input" id="name" {...register("password", requiredField)} type="text"
+                    <input className="input__input" id="name" {...register("password", requiredField)} type="password"
                            placeholder="Ваш пароль"/>
                 </div>
             </li>

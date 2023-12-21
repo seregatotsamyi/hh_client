@@ -5,7 +5,7 @@ import {
 } from "../type/type";
 import {loadingStatus} from "./appReducer";
 import {ROLE_EMP} from "../utils/consts";
-import { setCountVacancyUser} from "./vacancyReducer";
+import {setCountVacancyUser} from "./vacancyReducer";
 
 
 export interface InitialStateType {
@@ -89,8 +89,12 @@ export const getUser = (data: getUserType) => async (dispatch: any) => {
 
 
     } catch (err: any) {
-        const error = err.response.data.message
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            console.error(error)
+        }
     }
 
     dispatch(loadingStatus(false))
@@ -104,9 +108,13 @@ export const updateEmp = (data: ProfileEmpForm) => async (dispatch: any) => {
         dispatch(setEmployersData(response.data))
         dispatch(setResponse("Успешно обновленено"))
     } catch (err: any) {
-        const error = err.response.data.message
-        dispatch(setResponse(error))
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            dispatch(setResponse(error))
+        }
+
     }
 
     dispatch(loadingStatus(false))
@@ -120,9 +128,12 @@ export const updateApl = (data: ProfileAplForm) => async (dispatch: any) => {
         dispatch(setApplicantData(response.data))
         dispatch(setResponse("Успешно обновленено"))
     } catch (err: any) {
-        const error = err.response.data.message
-        dispatch(setResponse(error))
-        console.log(error)
+        if (err.message == "Network Error") {
+            console.error("Network Error")
+        } else {
+            const error = err.response.data.message
+            dispatch(setResponse(error))
+        }
     }
 
     dispatch(loadingStatus(false))

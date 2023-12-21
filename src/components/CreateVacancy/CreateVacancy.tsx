@@ -6,7 +6,7 @@ import {nameField, numberField} from "../../utils/validators/validators";
 import {Select} from 'antd';
 import 'dayjs/locale/ru';
 import {RootState} from "../../store/store";
-import {LOGIN_PATH, MAIN_PATH, PROFILE_LIST_VACANCY} from "../../utils/consts";
+import {LOGIN_PATH, PROFILE_LIST_VACANCY} from "../../utils/consts";
 import {Navigate} from "react-router-dom";
 import {
     fetchOptionsActivities,
