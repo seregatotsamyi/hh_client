@@ -12,7 +12,7 @@ export interface VacancyListType extends React.HTMLProps<HTMLDivElement> {
 }
 
 const VacancyList: React.FC<VacancyListType> = ({isProfile}: VacancyListType) => {
-    const dispatch = useDispatch()
+    const dispatch:any = useDispatch()
 
     //const [load, setLoad] = useState<boolean>(true);
 

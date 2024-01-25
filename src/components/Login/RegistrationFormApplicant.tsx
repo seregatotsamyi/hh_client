@@ -1,6 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import {Link, Navigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {LOGIN_PATH, ROLE_APL} from "../../utils/consts";
 import {useForm, SubmitHandler} from "react-hook-form"
 import {
@@ -8,37 +7,50 @@ import {
     loginField,
     nameField,
     passwordField,
-    phoneField,
     requiredField
 } from "../../utils/validators/validators";
-import {RegistrationFormApplicantType} from "../../type/type";
+import {RegistrationApplicantType, RegistrationFormApplicantType} from "../../type/type";
 import {registerApl} from "../../store/authReducer";
 import {RootState} from "../../store/store";
-
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
+import PhoneInput from "../Input/PhoneInput";
+import AddressInput from "../Input/AddressInput";
 
 
 const RegistrationFormApplicant = () => {
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-    const {register, handleSubmit, formState: {errors}, getValues} = useForm<RegistrationFormApplicantType>()
+    const error = useAppSelector((state: RootState) => state.auth.error)
+    const currentAddress = useAppSelector((state: RootState) => state.input.currentAddress)
+
+    const {register, control, handleSubmit, formState: {errors}, getValues} = useForm<RegistrationFormApplicantType>()
 
     const onSubmit: SubmitHandler<RegistrationFormApplicantType> = (data) => {
-        data.role = ROLE_APL
-        dispatch(registerApl(data))
-    }
 
-    const error = useSelector((state: RootState) => state.auth.error)
+        let dataSend:RegistrationApplicantType = {
+            ...data,
+            role: data.role = ROLE_APL,
+            address: data.address = {
+                house: currentAddress.house,
+                region: currentAddress.region,
+                region_with_type: currentAddress.region_with_type,
+                street_with_type: currentAddress.street_with_type,
+                city: currentAddress.city,
+                index: currentAddress.index,
+                region_type: currentAddress.region_type,
+                country: currentAddress.country
+            }
+        }
 
-    const isSuccessRegistration = useSelector((state: RootState) => state.auth.isSuccessRegistration)
+        dispatch(registerApl(dataSend))
 
-    if (isSuccessRegistration) {
-        return <Navigate to={LOGIN_PATH}/>
     }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <ul className="login__grid">
+
                 <li className="login__row">
 
                     <div className={`login__input input ${errors.firstName ? "_error" : ""}`}>
@@ -102,7 +114,6 @@ const RegistrationFormApplicant = () => {
 
 
                 </li>
-
                 <li className="login__row">
 
                     <div className={`login__input input ${errors.phone ? "_error" : ""}`}>
@@ -110,8 +121,7 @@ const RegistrationFormApplicant = () => {
                             <label className="input__label" htmlFor="phone">
                                 Телефон
                             </label>
-                            <input className="input__input" id="phone" {...register("phone", phoneField)} type="phone"
-                                   placeholder="+7 (000) 00-00-000"/>
+                            <PhoneInput control={control}/>
                         </div>
                         {
                             errors.phone && (
@@ -126,10 +136,33 @@ const RegistrationFormApplicant = () => {
                 </li>
                 <li className="login__row">
 
+                    <div className={`login__input input ${errors.email ? "_error" : ""}`}>
+                        <div className="input__input-wrap">
+                            <label className="input__label" htmlFor="email">
+                                Email
+                            </label>
+                            <input className="input__input"
+                                   id="email" {...register("email", emailField)}
+                                   type="email"
+                                   autoComplete={"false"}
+                            />
+                        </div>
+                        {
+                            errors.email && (
+                                <div className="input__error">
+                                    {errors.email.message}
+                                </div>
+                            )
+                        }
+                    </div>
+
+                </li>
+                <li className="login__row">
+
                     <div className={`login__input input ${errors.login ? "_error" : ""}`}>
                         <div className="input__input-wrap">
                             <label className="input__label" htmlFor="login">
-                                Логин
+                                Логин (псевдоним)
                             </label>
                             <input className="input__input" id="login" {...register("login", loginField)} type="text" placeholder="user"/>
                         </div>
@@ -148,7 +181,7 @@ const RegistrationFormApplicant = () => {
                     <div className={`login__input input ${errors.password ? "_error" : ""}`}>
                         <div className="input__input-wrap">
                             <label className="input__label" htmlFor="password">
-                                Пароль
+                                Секретный пароль
                             </label>
                             <input className="input__input" id="password" {...register("password", passwordField)} type="password"
                                    placeholder="*****"/>
@@ -186,36 +219,31 @@ const RegistrationFormApplicant = () => {
 
                 </li>
                 <li className="login__row">
+                    <div className={`login__input input ${errors.address ? "_error" : ""}`}>
 
-                    <div className={`login__input input ${errors.email ? "_error" : ""}`}>
                         <div className="input__input-wrap">
-                            <label className="input__label" htmlFor="email">
-                                Email (необязательно)
+
+                            <label className="input__label" htmlFor="address">
+                                Адрес
                             </label>
-                            <input className="input__input"
-                                   id="email" {...register("email", emailField)}
-                                   type="email"
-                                   autoComplete={"false"}
-                                  />
+                            <AddressInput control={control}/>
                         </div>
                         {
-                            errors.email && (
+                            errors.address && (
                                 <div className="input__error">
-                                    {errors.email.message}
+                                    {errors.address.message}
                                 </div>
                             )
                         }
                     </div>
-
                 </li>
-
                 <li className="login__row">
 
                     <div className={`login__input input ${errors.check ? "_error" : ""}`}>
                         <div className="input__input-wrap">
                             <input className="input__input _check" {...register("check", requiredField)} type="checkbox" placeholder="" id="check"/>
                             <label className="input__label _check" htmlFor="check">
-                                Согалшаюсь на обработку персональных данных
+                                Соглашаюсь на передачу данных космическим создателям
                             </label>
 
                         </div>
@@ -229,6 +257,7 @@ const RegistrationFormApplicant = () => {
                     </div>
 
                 </li>
+
             </ul>
 
             {
@@ -239,14 +268,12 @@ const RegistrationFormApplicant = () => {
                 )
             }
 
-
             <button className="login__btn btn" type={"submit"}>
                 Регистрация
             </button>
             <div className="login__subtext">
                 <span>Уже зарегистрированы?</span> <Link to={LOGIN_PATH}>Авторизируйтесь!</Link>
             </div>
-
 
         </form>
     )

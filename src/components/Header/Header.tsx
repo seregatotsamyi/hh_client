@@ -1,7 +1,14 @@
 import React from 'react';
 import LogoImg from "../../media/images/logo.svg";
 import {Link} from "react-router-dom";
-import {LOGIN_PATH, MAIN_PATH, PROFILE_PATH, REGISTRATION_PATH} from '../../utils/consts';
+import {
+    LOGIN_PATH,
+    MAIN_PATH,
+    PROFILE_PATH,
+    REGISTRATION_PATH,
+    typeAppDesktop,
+    typeAppMobile
+} from '../../utils/consts';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import BurgerSvg from "../Svg/BurgerSvg";
@@ -14,7 +21,7 @@ const Header: React.FC = () => {
     const dispatch = useDispatch()
 
     const isAuth = useSelector((state: RootState) => state.auth.isAuth)
-    const width = useSelector((state: RootState) => state.app.width)
+    const typeApp = useSelector((state: RootState) => state.app.typeApp)
     const isShowMenu = useSelector((state: RootState) => state.app.showMobMenu)
 
     const toShowMenu = () => {
@@ -29,12 +36,29 @@ const Header: React.FC = () => {
     return (
         <header className="header">
 
+            <div className="header__top">
+                <div className="container">
+                    <ul className="header__top-list">
+                        <li className="header__top-item">
+                            <Link className="header__top-link underline" to={MAIN_PATH}>
+                                Искателям
+                            </Link>
+                        </li>
+                        <li className="header__top-item">
+                            <Link className="header__top-link underline" to={"/"}>
+                                Давателям
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <div className="container">
                 <div className="header__inner">
 
                     <div className="header__left-wrap">
                         <Link className="header__logo logo" to={MAIN_PATH}>
-                            <img className="logo__img" width="50" height="50" src={LogoImg} alt="logo"/>
+                            <img className="logo__img"  width="250" height="53" src={LogoImg} alt="logo"/>
                         </Link>
                     </div>
 
@@ -45,17 +69,12 @@ const Header: React.FC = () => {
                         <nav className="menu">
                             <ul className="menu__list">
                                 <li className="menu__item">
-                                    <Link className="menu__link" to={MAIN_PATH}>
-                                        Соискателям
-                                    </Link>
-                                </li>
-                                <li className="menu__item">
-                                    <Link className="menu__link" to="/emp">
-                                        Работодателям
+                                    <Link className="menu__link" to={""}>
+                                        О проекте
                                     </Link>
                                 </li>
                                 {
-                                    width < 769 && isAuth ? (
+                                    typeApp === typeAppMobile && isAuth ? (
                                         <li className="menu__item">
                                             <button className="menu__link menu__link_exit" onClick={unLogin}>
                                                 Выйти
@@ -65,31 +84,37 @@ const Header: React.FC = () => {
                                 }
                             </ul>
                         </nav>
-                        <Link className="header__mob-profile" to={PROFILE_PATH}>
-                            Личный кабинет
-                        </Link>
+
+                        <div className="header__mob-profile-wrap">
+                            {
+                                isAuth ? <Link className="header__mob-profile btn" to={PROFILE_PATH}>
+                                    Личный кабинет
+                                </Link> : <>
+                                    <Link className="header__mob-profile btn" to={LOGIN_PATH}>
+                                        Войти
+                                    </Link>
+                                    <Link className="header__mob-profile btn btn_2" to={REGISTRATION_PATH}>
+                                        Регистрация
+                                    </Link>
+                                </>
+                            }
+
+                        </div>
+
                     </div>
 
 
                     <div className="header__right-wrap">
-                        {isAuth && <>
+                        {isAuth &&
                             <div className="header__auth">
                                 <Link className="header__profile btn" to={PROFILE_PATH}>
                                     Личный кабинет
                                 </Link>
 
                             </div>
-                            {
-                                width <= 1024 ? (
-                                    <button className="header__burger btn" onClick={toShowMenu}>
-                                        <BurgerSvg/>
-                                    </button>
-                                ) : null
-                            }
+                        }
 
-                        </>}
-
-                        {!isAuth && <>
+                        {!isAuth && typeApp === typeAppDesktop && <>
                             <div className="header__unAuth">
                                 <Link className="header__unAuth-btn btn" to={LOGIN_PATH}>
                                     Войти
@@ -99,6 +124,14 @@ const Header: React.FC = () => {
                                 </Link>
                             </div>
                         </>}
+
+                        {
+                            typeApp === typeAppMobile ? (
+                                <button className="header__burger btn" onClick={toShowMenu}>
+                                    <BurgerSvg/>
+                                </button>
+                            ) : null
+                        }
 
 
                     </div>

@@ -1,5 +1,6 @@
 import axios from "axios";
-import {createVacancyFormType, ProfileAplForm, ProfileEmpForm, vacancyType} from "../type/type";
+import { ProfileAplForm, ProfileEmpForm} from "../type/type";
+import {ROLE_APL, ROLE_EMP} from "../utils/consts";
 
 export const authAPI = {
     me() {
@@ -22,7 +23,7 @@ export const authAPI = {
         })
     },
 
-    registerApl(firstName: string, secondName: string, surname: string, phone: string, login: string, password: string, email: string | null, role: string) {
+    registerApl(firstName: string, secondName: string, surname: string, phone: string, login: string, password: string, email: string | null, role: string|typeof ROLE_APL, address:object) {
 
         return instance.post('api/applicant/registration', {
             login,
@@ -31,22 +32,21 @@ export const authAPI = {
             surname, password,
             phone,
             email,
-            role
+            role,
+            address
         })
     },
 
-    registerEmp(login: string, name: string, email: string, password: string, phone: string, settlements_id: number, street_id: number, number_house: number, role: string, short_name: string | null) {
+    registerEmp(login: string, name_company: string, email: string, password: string, phone: string,  address:object, role: string|typeof ROLE_EMP, short_name: string | null) {
 
         return instance.post('api/employer/registration', {
             login,
-            name,
+            name_company,
             email,
             password,
             phone,
-            settlements_id,
             role,
-            street_id,
-            number_house,
+            address,
             short_name
         })
     },
@@ -54,12 +54,17 @@ export const authAPI = {
 }
 
 export const addressAPI = {
-    getSettlements(stroke: string) {
-        return instance.get(`api/address/settlements/${stroke}`)
+    getAddresses(stroke: string) {
+        return axios.post(`http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address`, {
+                query: stroke
+            }, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization' : 'Token 0fe171a29fd492d223677eb07a6c4dcfc38b4bcd'
+                }
+            }
+        )
     },
-    getStreet(stroke: string) {
-        return instance.get(`api/address/street/${stroke}`)
-    }
 }
 export const vacancyAPI = {
     createVacancy(data: any) {
@@ -88,14 +93,14 @@ export const vacancyAPI = {
     }
 }
 
-export const reportApi={
-    reportOne(post:string, date_start:string, date_end:string){
+export const reportApi = {
+    reportOne(post: string, date_start: string, date_end: string) {
         return instance.get(`api/vacancy/reportOne/?post=${post}&date_start=${date_start}&date_end=${date_end}`)
     },
-    reportTwo(date_start:string, date_end:string){
+    reportTwo(date_start: string, date_end: string) {
         return instance.get(`api/vacancy/reportTwo/?date_start=${date_start}&date_end=${date_end}`)
     },
-    reportThree(date_start:string, date_end:string){
+    reportThree(date_start: string, date_end: string) {
         return instance.get(`api/vacancy/reportThree/?date_start=${date_start}&date_end=${date_end}`)
     },
 }

@@ -10,3 +10,5 @@ export const ERROR_PATH = '/error'
 export const PROFILE_LIST_VACANCY= '/profile/vacancy'
 export const VACANCY= '/vacancy'
 export const REPORT= '/report'
+export const typeAppMobile = "mobile"
+export const typeAppDesktop = "desktop"

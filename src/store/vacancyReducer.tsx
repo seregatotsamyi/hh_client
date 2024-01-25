@@ -158,32 +158,32 @@ export const setVacancyAC = (page: number, pageSize: number, userId: number | nu
     dispatch(loadingStatus(true))
 
     try {
-        const response = await vacancyAPI.getVacancy(page, pageSize, userId);
-        let ObjForSet = {
-            totalVacancyCount: response.data.totalCount,
-            vacancy: [{}]
-        }
+       // const response = await vacancyAPI.getVacancy(page, pageSize, userId);
+       //  let ObjForSet = {
+       //      totalVacancyCount: response.data.totalCount,
+       //      vacancy: [{}]
+       //  }
 
 
-        let ArrayVacancy: Array<object> = response.data.vacanceis.map((item: any) => {
-            let newItem = {
-                id: item.id,
-                name: item.name,
-                payment: [item.payment_lower, item.payment_upper],
-                employer: item.employer.name,
-                employerId: item.employer_id,
-                address: item.employer.address.settlement,
-                status: item.status
-            }
-            return newItem
-        })
-
-
-        ObjForSet.vacancy = ArrayVacancy
-
-        dispatch(setPageSize(pageSize))
-        dispatch(setCurrentPage(page))
-        dispatch(setVacancy(ObjForSet))
+        // let ArrayVacancy: Array<object> = response.data.vacanceis.map((item: any) => {
+        //     let newItem = {
+        //         id: item.id,
+        //         name: item.name,
+        //         payment: [item.payment_lower, item.payment_upper],
+        //         employer: item.employer.name,
+        //         employerId: item.employer_id,
+        //         address: item.employer.address.settlement,
+        //         status: item.status
+        //     }
+        //     return newItem
+        // })
+        //
+        //
+        // ObjForSet.vacancy = ArrayVacancy
+        //
+        // dispatch(setPageSize(pageSize))
+        // dispatch(setCurrentPage(page))
+        // dispatch(setVacancy(ObjForSet))
 
     } catch (err: any) {
         if (err.message == "Network Error") {
@@ -200,28 +200,28 @@ export const setVacancyItemAC = (id: number) => async (dispatch: any) => {
     dispatch(loadingStatus(true))
 
     try {
-        const response = await vacancyAPI.getItem(id);
+       // const response = await vacancyAPI.getItem(id);
 
-        let ObjForSet = {
-            id: response.data.id,
-            name: response.data.name,
-            payment: [response.data.payment_lower, response.data.payment_upper],
-            employer: response.data.employer.name,
-            employerId: response.data.employer_id,
-            address: response.data.employer.address.settlement.settlement,
-            gender: response.data.gender.name,
-            education: response.data.education.education_value,
-            age: [response.data.age_lower, response.data.age_upper],
-            availability_social_package: response.data.availability_social_package,
-            registration_work_book: response.data.registration_work_book,
-            communication_skills: response.data.communication_skills,
-            activities: response.data.activities,
-            duties: response.data.duties,
-            status: response.data.status,
-            start_date: response.data.start_date,
-            end_date: response.data.end_date
-        }
-        dispatch(setVacancyItem(ObjForSet))
+        // let ObjForSet = {
+        //     id: response.data.id,
+        //     name: response.data.name,
+        //     payment: [response.data.payment_lower, response.data.payment_upper],
+        //     employer: response.data.employer.name,
+        //     employerId: response.data.employer_id,
+        //     address: response.data.employer.address.settlement.settlement,
+        //     gender: response.data.gender.name,
+        //     education: response.data.education.education_value,
+        //     age: [response.data.age_lower, response.data.age_upper],
+        //     availability_social_package: response.data.availability_social_package,
+        //     registration_work_book: response.data.registration_work_book,
+        //     communication_skills: response.data.communication_skills,
+        //     activities: response.data.activities,
+        //     duties: response.data.duties,
+        //     status: response.data.status,
+        //     start_date: response.data.start_date,
+        //     end_date: response.data.end_date
+        // }
+        // dispatch(setVacancyItem(ObjForSet))
 
     } catch (err: any) {
         if (err.message == "Network Error") {

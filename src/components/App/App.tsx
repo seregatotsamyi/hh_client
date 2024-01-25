@@ -3,30 +3,32 @@ import React, {useEffect} from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import {showMobMenu} from "../../store/appReducer";
-import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
-import Loading from "../Loading/Loading";
+import Promo from "../Promo/Promo";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 
 export const App = function App() {
-    const dispatch = useDispatch()
+
+    const dispatch = useAppDispatch()
     const location = useLocation();
-    const loading = useSelector((state: RootState) => state.app.loading)
+    const isAuth = useAppSelector((state: RootState) => state.auth.isAuth)
 
 
     useEffect(() => {
         dispatch(showMobMenu(false))
-    }, [location]);
+    }, [location, dispatch]);
 
     return (<>
-
-        {
-            loading ?  <Loading/> : ""
-        }
 
         <Header/>
 
         <main className="main">
+
+            {
+                isAuth? "" : <Promo/>
+            }
+
             <Outlet/>
         </main>
 

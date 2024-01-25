@@ -20,7 +20,7 @@ import {createVacancy} from "../../store/vacancyReducer";
 
 const CreateVacancy: React.FC = () => {
 
-    const dispatch = useDispatch()
+    const dispatch:any = useDispatch()
 
     const userId = useSelector((state: RootState) => state.auth.userId)
     const isSuccessCreateVacancy = useSelector((state: RootState) => state.vacancy.isSuccessCreateVacancy)

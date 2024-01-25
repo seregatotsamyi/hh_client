@@ -8,7 +8,7 @@ import {ProfileAplForm} from "../../type/type";
 import {emailField, loginField, nameField2, phoneField} from "../../utils/validators/validators";
 
 const ProfileApl: React.FC = () => {
-    const dispatch = useDispatch()
+    const dispatch:any = useDispatch()
 
     const id = useSelector((state: RootState) => state.auth.userId)
     const applicant = useSelector((state: RootState) => state.user.applicant)

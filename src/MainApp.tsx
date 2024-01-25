@@ -1,32 +1,45 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {RouterProvider} from 'react-router-dom';
 import './css/style.min.css';
 import router from "./routes";
-import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/store";
-import {initializeApp, setWidth} from "./store/appReducer";
+import {initializeApp, setTypeApp} from "./store/appReducer";
 import Loading from "./components/Loading/Loading";
-
+import {useAppDispatch, useAppSelector} from './store/hooks';
+import {typeAppDesktop, typeAppMobile} from "./utils/consts";
 
 const routers = router;
 
 const MainApp = () => {
-    const dispatch = useDispatch()
 
-    const loading = useSelector((state: RootState) => state.app.loading)
+    const dispatch = useAppDispatch()
+
+    const loading = useAppSelector((state: RootState) => state.app.loading)
+
+    const [width, setWidth] = useState<number>(window.innerWidth);
 
     useEffect(() => {
-        dispatch(setWidth(window.innerWidth))
-        dispatch(initializeApp())
-        window.onresize = () => {
-            dispatch(setWidth(window.innerWidth));
-        };
-    }, [])
 
-    if(loading){
+        if (width < 769) {
+            dispatch(setTypeApp(typeAppMobile))
+        }
+        dispatch(initializeApp())
+
+    }, [dispatch])
+
+    window.onresize = () => {
+        setWidth(window.innerWidth)
+        if (width < 769) {
+            dispatch(setTypeApp(typeAppMobile))
+        } else {
+            dispatch(setTypeApp(typeAppDesktop))
+        }
+    };
+
+
+    if (loading) {
         return <Loading/>
     }
-
 
     return <RouterProvider router={routers}/>
 }

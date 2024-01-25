@@ -23,6 +23,29 @@ export type OptionType = {
     label: string
 }
 
+export type AddressType = {
+    house: string | null
+    region: string | null
+    region_with_type: string | null
+    street_with_type: string | null
+    city: string | null
+    index: string | null
+    region_type: string | null
+    country: string | null
+}
+
+export interface RegistrationApplicantType {
+    firstName: string
+    secondName: string
+    surname: string
+    phone: string
+    login: string
+    password: string
+    email: string
+    role: string,
+    address: AddressType
+}
+
 export interface RegistrationFormApplicantType {
     firstName: string
     secondName: string
@@ -31,24 +54,34 @@ export interface RegistrationFormApplicantType {
     login: string
     password: string
     passwordSecond: string
-    email: string | null
+    email: string
     check: boolean
-    role: string
+    role: string | typeof ROLE_APL,
+    address: AddressType
 }
 
 export interface RegistrationFormEmployerType {
     login: string
-    name: string
+    name_company: string
     email: string
     password: string
     passwordSecond: string
     phone: string
-    settlements_id: number
-    street_id: number
-    number_house: number
+    address: AddressType
     check: boolean,
-    role: string,
-    short_name: string | null
+    role: string | typeof ROLE_EMP,
+    short_name: string | null,
+}
+
+export interface RegistrationEmployerType {
+    login: string
+    name_company: string
+    email: string
+    password: string
+    phone: string
+    address: AddressType
+    role: string | typeof ROLE_EMP,
+    short_name: string | null,
 }
 
 export interface loginFormType {

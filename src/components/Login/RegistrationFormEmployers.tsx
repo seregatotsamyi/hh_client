@@ -1,103 +1,68 @@
-import React, {useRef, useState} from 'react';
-import {Link, Navigate} from "react-router-dom";
+import React from 'react';
+import {Link} from "react-router-dom";
 import {LOGIN_PATH, ROLE_EMP} from "../../utils/consts";
-import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {OptionType, RegistrationFormEmployerType} from "../../type/type";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {RegistrationEmployerType, RegistrationFormEmployerType} from "../../type/type";
 import {registerEmp} from "../../store/authReducer";
 import {
     emailFieldRequired,
-    loginField,
-    nameField, nameField2, numberField,
+    loginField, nameCompany,
+    nameField,
     passwordField,
-    phoneField,
     requiredField
 } from "../../utils/validators/validators";
-import {Select, Spin} from 'antd';
-import {fetchOptionsSettlements, fetchOptionsStreet} from "../../store/inputReducer";
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import PhoneInput from "../Input/PhoneInput";
+import AddressInput from "../Input/AddressInput";
 
 
 const RegistrationFormEmployers = () => {
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-    const optionsSettlements = useSelector((state: RootState) => state.input.optionsSettlements)
-
-    const optionsStreet = useSelector((state: RootState) => state.input.optionsStreet)
-
-    const [fetching, setFetching] = useState(false);
-
-    const fetchRef = useRef(0);
-
-
-    const setOptionSettlements = (stroke: string) => {
-        setFetching(true)
-        fetchRef.current += 1;
-        const fetchId = fetchRef.current;
-        dispatch(fetchOptionsSettlements(stroke))
-        setFetching(false)
-    }
-
-    const setOptionStreet = (stroke: string) => {
-        setFetching(true)
-        fetchRef.current += 1;
-        const fetchId = fetchRef.current;
-        dispatch(fetchOptionsStreet(stroke))
-        setFetching(false)
-    }
-
+    const currentAddress = useAppSelector((state: RootState) => state.input.currentAddress)
+    const error = useAppSelector((state: RootState) => state.auth.error)
 
     const {register, control, handleSubmit, formState: {errors}, getValues} = useForm<RegistrationFormEmployerType>()
 
-    const error = useSelector((state: RootState) => state.auth.error)
-
     const onSubmit: SubmitHandler<RegistrationFormEmployerType> = (data) => {
-        data.role = ROLE_EMP
-        // @ts-ignore
-        data.settlements_id = data.settlements_id.value
-        // @ts-ignore
-        data.street_id = data.street_id.value
-        console.log(data)
-        dispatch(registerEmp(data))
+
+        let dataSend: RegistrationEmployerType = {
+            ...data,
+            role: data.role = ROLE_EMP,
+            address: data.address = {
+                house: currentAddress.house,
+                region: currentAddress.region,
+                region_with_type: currentAddress.region_with_type,
+                street_with_type: currentAddress.street_with_type,
+                city: currentAddress.city,
+                index: currentAddress.index,
+                region_type: currentAddress.region_type,
+                country: currentAddress.country
+            }
+        }
+        dispatch(registerEmp(dataSend))
     }
-
-    const isSuccessRegistration = useSelector((state: RootState) => state.auth.isSuccessRegistration)
-
-    if (isSuccessRegistration) {
-        return <Navigate to={LOGIN_PATH}/>
-    }
-
-
-    const optionsSettlementsSet = optionsSettlements.map((e: any): OptionType => ({
-        value: e.id,
-        label: e.settlement,
-    }))
-
-    const optionsStreetSet = optionsStreet.map((e: any): OptionType => ({
-        value: e.id,
-        label: e.name,
-    }))
-
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
 
-
             <ul className="login__grid">
                 <li className="login__row">
-                    <div className={`login__input input ${errors.name ? "_error" : ""}`}>
+                    <div className={`login__input input ${errors.name_company ? "_error" : ""}`}>
                         <div className="input__input-wrap">
                             <label className="input__label" htmlFor="name">
-                                Имя (название)
+                                Имя планеты (название компании)
                             </label>
-                            <input className="input__input" id="name" {...register("name", nameField2)} type="text"
-                                   placeholder='ОАО "Строитель"'/>
+                            <input className="input__input" id="name" {...register("name_company", nameCompany)}
+                                   type="text"
+                                   placeholder='ОАО "Земля"'/>
                         </div>
                         {
-                            errors.name && (
+                            errors.name_company && (
                                 <div className="input__error">
-                                    {errors.name.message}
+                                    {errors.name_company.message}
                                 </div>
                             )
                         }
@@ -109,9 +74,9 @@ const RegistrationFormEmployers = () => {
                             <label className="input__label" htmlFor="short_name">
                                 Короткое название (необязательно)
                             </label>
-                            <input className="input__input" id="short_name" {...register("short_name", nameField2)}
+                            <input className="input__input" id="short_name" {...register("short_name", nameField)}
                                    type="text"
-                                   placeholder='ОАО "Строитель"'/>
+                                   placeholder='Земля'/>
                         </div>
                         {
                             errors.short_name && (
@@ -130,7 +95,7 @@ const RegistrationFormEmployers = () => {
                             </label>
                             <input className="input__input" id="email" {...register("email", emailFieldRequired)}
                                    type="email"
-                                   placeholder="example@exml.ru"/>
+                                   placeholder="example@examp.ru"/>
                         </div>
                         {
                             errors.email && (
@@ -147,8 +112,7 @@ const RegistrationFormEmployers = () => {
                             <label className="input__label" htmlFor="phone">
                                 Телефон
                             </label>
-                            <input className="input__input" id="phone" {...register("phone", phoneField)} type="text"
-                                   placeholder="+7 (000) 00-00-000"/>
+                            <PhoneInput control={control}/>
                         </div>
                         {
                             errors.phone && (
@@ -163,10 +127,10 @@ const RegistrationFormEmployers = () => {
                     <div className={`login__input input ${errors.login ? "_error" : ""}`}>
                         <div className="input__input-wrap">
                             <label className="input__label" htmlFor="login">
-                                Логин
+                                Логин (псевдоним)
                             </label>
                             <input className="input__input" id="login" {...register("login", loginField)} type="text"
-                                   placeholder="user"/>
+                                   placeholder="pokoritelVseya"/>
                         </div>
                         {
                             errors.login && (
@@ -181,7 +145,7 @@ const RegistrationFormEmployers = () => {
                     <div className={`login__input input ${errors.password ? "_error" : ""}`}>
                         <div className="input__input-wrap">
                             <label className="input__label" htmlFor="password">
-                                Пароль
+                                Секретный пароль
                             </label>
                             <input className="input__input" id="password" {...register("password", passwordField)}
                                    type="password" placeholder="*****"/>
@@ -215,115 +179,19 @@ const RegistrationFormEmployers = () => {
                     </div>
                 </li>
                 <li className="login__row">
-                    <div className={`login__input input ${errors.settlements_id ? "_error" : ""}`}>
+                    <div className={`login__input input ${errors.address ? "_error" : ""}`}>
 
                         <div className="input__input-wrap">
 
-
-                            <label className="input__label" htmlFor="settlements_id">
-                                Город (населенный пункт, район)
+                            <label className="input__label" htmlFor="address">
+                                Адрес
                             </label>
-                            <Controller
-                                control={control}
-                                name='settlements_id'
-                                rules={{
-                                    required: "Поле обязательно для заполнение",
-                                }}
-                                render={({field}) => (
-                                    <>
-                                        <Select {...field}
-                                                showSearch
-                                                className={"ant-custom"}
-                                                labelInValue
-                                                options={optionsSettlementsSet}
-
-                                                filterOption={(input, option?) =>
-                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-
-
-                                                filterSort={(optionA, optionB) =>
-                                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                                                }
-                                                onSearch={(value: string) => {
-                                                    setOptionSettlements(value)
-                                                }}
-                                                notFoundContent={fetching ? <Spin size="small"/> : null}
-                                        />
-
-
-                                    </>
-                                )}
-                            />
+                            <AddressInput control={control}/>
                         </div>
                         {
-                            errors.settlements_id && (
+                            errors.address && (
                                 <div className="input__error">
-                                    {errors.settlements_id.message}
-                                </div>
-                            )
-                        }
-                    </div>
-                </li>
-                <li className="login__row">
-                    <div className={`login__input input ${errors.street_id ? "_error" : ""}`}>
-                        <div className="input__input-wrap">
-                            <label className="input__label" htmlFor="street_id">
-                                Улица (пр-т)
-                            </label>
-                            <Controller
-                                control={control}
-                                name='street_id'
-                                rules={{
-                                    required: "Поле обязательно для заполнение",
-                                }}
-                                render={({field}) => (
-                                    <>
-                                        <Select {...field}
-                                                showSearch
-                                                className={"ant-custom"}
-                                                labelInValue
-                                                options={optionsStreetSet}
-
-                                                filterOption={(input, option?) =>
-                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-
-
-                                                filterSort={(optionA, optionB) =>
-                                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                                                }
-                                                onSearch={(value: string) => {
-                                                    setOptionStreet(value)
-                                                }}
-                                                notFoundContent={fetching ? <Spin size="small"/> : null}
-                                        />
-
-
-                                    </>
-                                )}
-                            />
-                        </div>
-                        {
-                            errors.street_id && (
-                                <div className="input__error">
-                                    {errors.street_id.message}
-                                </div>
-                            )
-                        }
-                    </div>
-                </li>
-                <li className="login__row">
-                    <div className={`login__input input ${errors.number_house ? "_error" : ""}`}>
-                        <div className="input__input-wrap">
-                            <label className="input__label" htmlFor="number_house">
-                                Номер дома
-                            </label>
-                            <input className="input__input" id="number_house" {...register("number_house", numberField)}
-                                   type="text" placeholder="д. 9"/>
-                        </div>
-                        {
-                            errors.number_house && (
-                                <div className="input__error">
-                                    {errors.number_house.message}
+                                    {errors.address.message}
                                 </div>
                             )
                         }
@@ -335,7 +203,7 @@ const RegistrationFormEmployers = () => {
                             <input className="input__input _check" {...register("check", requiredField)} type="checkbox"
                                    id="check"/>
                             <label className="input__label _check" htmlFor="check">
-                                Согалшаюсь на обработку персональных данных
+                                Соглашаюсь на передачу данных космическим создателям
                             </label>
                         </div>
                         {
@@ -357,14 +225,13 @@ const RegistrationFormEmployers = () => {
                 )
             }
 
-
             <button className="login__btn btn" type={"submit"}>
                 Регистрация
             </button>
+
             <div className="login__subtext">
                 <span>Уже зарегистрированы?</span> <Link to={LOGIN_PATH}>Авторизируйтесь!</Link>
             </div>
-
 
         </form>
     )

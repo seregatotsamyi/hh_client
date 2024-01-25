@@ -1,27 +1,33 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {SetOptionsType} from "../type/type";
-import {addressAPI, userAPI, vacancyAPI} from "../api/api";
+import {AddressType, SetOptionsType} from "../type/type";
+import {addressAPI, userAPI} from "../api/api";
 
 
 export interface InitialStateType {
-    optionsSettlements: Array<object>
-    optionsStreet: Array<object>
+    optionsAddress: Array<object>
     optionsGender: Array<object>
     optionsEducation: Array<object>
     optionsDuties: Array<object>
     optionsActivities: Array<object>
-    optionsPosts: Array<object>
-
+    currentAddress: AddressType
 }
 
 const initialState: InitialStateType = {
-    optionsSettlements: [],
-    optionsStreet: [],
+    optionsAddress: [],
+    currentAddress: {
+        house: null,
+        region: null,
+        region_with_type: null,
+        street_with_type: null,
+        city: null,
+        index: null,
+        region_type: null,
+        country: null
+    },
     optionsGender: [],
     optionsEducation: [],
     optionsDuties: [],
     optionsActivities: [],
-    optionsPosts: []
 }
 
 export const inputReducer = createSlice({
@@ -29,11 +35,8 @@ export const inputReducer = createSlice({
     initialState,
     reducers:
         {
-            setOptionsSettlements: (state, action: PayloadAction<SetOptionsType>) => {
-                state.optionsSettlements = action.payload.data
-            },
-            setOptionsStreet: (state, action: PayloadAction<SetOptionsType>) => {
-                state.optionsStreet = action.payload.data
+            setOptionsAddress: (state, action: PayloadAction<any>) => {
+                state.optionsAddress = action.payload
             },
             setOptionsGender: (state, action: PayloadAction<SetOptionsType>) => {
                 state.optionsGender = action.payload.data
@@ -47,32 +50,46 @@ export const inputReducer = createSlice({
             setOptionsActivities: (state, action: PayloadAction<SetOptionsType>) => {
                 state.optionsActivities = action.payload.data
             },
-            setOptionsPosts: (state, action: PayloadAction<SetOptionsType>) => {
-                state.optionsPosts = action.payload.data
+            setCurrentAddress: (state, action: PayloadAction<AddressType>) => {
+                state.currentAddress = action.payload
             }
         }
 })
 
 
 export const {
-    setOptionsSettlements,
-    setOptionsStreet,
+    setOptionsAddress,
     setOptionsGender,
     setOptionsEducation,
     setOptionsDuties,
     setOptionsActivities,
-    setOptionsPosts
+    setCurrentAddress
 } = inputReducer.actions
 
 
-export const fetchOptionsSettlements = (stroke: string) => async (dispatch: any) => {
+export const fetchOptionsAddress = (stroke: string) => async (dispatch:any) => {
+
     try {
 
-        const response = await addressAPI.getSettlements(stroke)
-        dispatch(setOptionsSettlements(response))
+        const response = await addressAPI.getAddresses(stroke)
+
+        let responseData = response.data.suggestions.map((item: any) => {
+            return ({
+                value: item.value,
+                index: item.data.postal_code,
+                region: item.data.region,
+                country: item.data.country,
+                region_with_type: item.data.region_with_type,
+                region_type: item.data.region_type,
+                city: item.data.city,
+                street_with_type: item.data.street_with_type,
+                house: item.data.house
+            })
+        })
+        dispatch(setOptionsAddress(responseData))
 
     } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message
@@ -81,37 +98,6 @@ export const fetchOptionsSettlements = (stroke: string) => async (dispatch: any)
     }
 }
 
-export const fetchOptionsStreet = (stroke: string) => async (dispatch: any) => {
-    try {
-
-        const response = await addressAPI.getStreet(stroke)
-        dispatch(setOptionsStreet(response))
-
-    } catch (err: any) {
-        if (err.message == "Network Error") {
-            console.error("Network Error")
-        } else {
-            const error = err.response.data.message
-            console.error(error)
-        }
-    }
-}
-
-export const fetchOptionsPosts = (stroke: string) => async (dispatch: any) => {
-    try {
-
-        const response = await vacancyAPI.getPosts(stroke)
-        dispatch(setOptionsPosts(response))
-
-    } catch (err: any) {
-        if (err.message == "Network Error") {
-            console.error("Network Error")
-        } else {
-            const error = err.response.data.message
-            console.error(error)
-        }
-    }
-}
 
 export const fetchOptionsGender = (id: number | null) => async (dispatch: any) => {
     try {
@@ -125,7 +111,7 @@ export const fetchOptionsGender = (id: number | null) => async (dispatch: any) =
         dispatch(setOptionsGender(response))
 
     } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message
@@ -146,7 +132,7 @@ export const fetchOptionsEducation = (id: number | null) => async (dispatch: any
         dispatch(setOptionsEducation(response))
 
     } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message
@@ -168,7 +154,7 @@ export const fetchOptionsDuties = (id: number | null) => async (dispatch: any) =
         dispatch(setOptionsDuties(response))
 
     } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message
@@ -191,7 +177,7 @@ export const fetchOptionsActivities = (id: number | null) => async (dispatch: an
         dispatch(setOptionsActivities(response))
 
     } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message

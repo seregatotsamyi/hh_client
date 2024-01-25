@@ -11,7 +11,7 @@ import {vacancyAPI} from "../../api/api";
 import {setCountVacancyUser} from "../../store/vacancyReducer";
 
 const ProfileEmp: React.FC = () => {
-    const dispatch = useDispatch()
+    const dispatch:any = useDispatch()
 
     const id = useSelector((state: RootState) => state.auth.userId)
     const employer = useSelector((state: RootState) => state.user.employers)

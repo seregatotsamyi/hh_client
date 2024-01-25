@@ -42,9 +42,13 @@ export const loginField = {
 
 export const phoneField = {
     required: "Поле обязательно для заполнение",
-    pattern: {
-        value: /^[0-9+ "\)\(]+$/,
-        message: "Недопустимый формат"
+    maxLength : {
+        value: 18,
+        message: 'Недопустимый формат'
+    },
+    minLength : {
+        value: 18,
+        message: 'Недопустимый формат'
     }
 }
 
@@ -55,8 +59,8 @@ export const passwordField = {
     //     message: "Пароль должен содержать заглавные и строчные латинские буквы, цифры, спец. символы. Длина от 8 символов"
     // }
     maxLength: {
-        value: 256,
-        message: 'Максимум 256 символа'
+        value: 128,
+        message: 'Максимум 128 символа'
     },
 }
 
@@ -77,6 +81,17 @@ export const nameField = {
 }
 
 export const nameField2 = {
+    pattern: {
+        value: /^[0-9a-zA-Zа-яА-ЯёЁ]+$/g,
+        message: 'Только буквы и сивол'
+    },
+    maxLength: {
+        value: 128,
+        message: 'Максимум 128 символа'
+    },
+}
+
+export const nameCompany = {
     pattern: {
         value: /^[0-9a-zA-Zа-яА-ЯёЁ" ]+$/g,
         message: 'Только буквы и сивол "'

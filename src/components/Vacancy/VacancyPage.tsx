@@ -10,7 +10,7 @@ import {MAIN_PATH, PROFILE_PATH} from "../../utils/consts";
 
 const VacancyPage: React.FC = () => {
 
-    const dispatch = useDispatch()
+    const dispatch:any = useDispatch()
     const params = useParams();
     let id = Number(params.id);
 
@@ -23,10 +23,10 @@ const VacancyPage: React.FC = () => {
     useEffect(() => {
         dispatch(setIsDeleted(false))
         if (!vacancyItem.id && error === null) {
-            dispatch(setVacancyItemAC(id))
+      //      dispatch(setVacancyItemAC(id))
         }
         if (id !== vacancyItem.id) {
-            dispatch(setVacancyItemAC(id))
+      //      dispatch(setVacancyItemAC(id))
         }
 
     }, [])

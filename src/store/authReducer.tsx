@@ -2,22 +2,24 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {authAPI} from '../api/api'
 import {
     loginFormType,
-    RegistrationFormApplicantType, RegistrationFormEmployerType,
+    RegistrationApplicantType,
+    RegistrationEmployerType,
     SetAuthUserDataJWTType,
     SetAuthUserDataType,
     SetErrorType
 } from "../type/type";
 import {jwtDecode} from "jwt-decode";
-import React from "react";
+import {loadingStatus} from "./appReducer";
 
 
 export interface InitialStateType {
     isAuth: boolean,
     login: string | null,
     userId: number | null,
-    error: string | null
-    role: string | null
-    isSuccessRegistration: boolean
+    error: string | null,
+    role: string | null,
+    inLogging: boolean,
+    inRegistration: boolean
 }
 
 const initialState: InitialStateType = {
@@ -26,7 +28,8 @@ const initialState: InitialStateType = {
     userId: null,
     error: null,
     role: null,
-    isSuccessRegistration: false
+    inLogging: false,
+    inRegistration: false
 }
 
 export const authReducer = createSlice({
@@ -43,6 +46,8 @@ export const authReducer = createSlice({
             state.login = null
             state.userId = null
             state.role = null
+            state.inLogging = false
+            state.inRegistration = false
         },
 
         setError: (state, action: PayloadAction<SetErrorType>) => {
@@ -53,34 +58,43 @@ export const authReducer = createSlice({
             state.error = null
         },
 
-        isSuccessRegistration: (state) => {
-            state.isSuccessRegistration = !state.isSuccessRegistration
+        inLoggingSet: (state, action: PayloadAction<boolean>) => {
+            state.inLogging = action.payload
+        },
+
+        inRegistrationSet: (state, action: PayloadAction<boolean>) => {
+            state.inRegistration = action.payload
         }
     },
 })
 
 
-export const {setAuthData, setError, unSetError, isSuccessRegistration, removeAuthData} = authReducer.actions
+export const {setAuthData, setError, unSetError, removeAuthData, inLoggingSet, inRegistrationSet} = authReducer.actions
 
 
 export const loginApl = (data: loginFormType) => async (dispatch: any) => {
+
+    dispatch(loadingStatus(true))
+
     try {
+        dispatch(inRegistrationSet(false))
         const response = await authAPI.loginApl(data.login, data.password, data.role)
         const jwt: SetAuthUserDataJWTType = jwtDecode(response.data.token)
         localStorage.setItem('token', response.data.token)
         dispatch(unSetError())
-
         let dataForReducer = {userId: jwt.id, login: jwt.login, role: jwt.role, isAuth: true}
         dispatch(setAuthData(dataForReducer))
-
+        dispatch(inLoggingSet(true))
     } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             dispatch(setError({error: "Network Error"}))
         } else {
             const error = err.response.data.message
             dispatch(setError({error}))
         }
     }
+
+    dispatch(loadingStatus(false))
 }
 
 export const loginEmp = (data: loginFormType) => async (dispatch: any) => {
@@ -94,63 +108,98 @@ export const loginEmp = (data: loginFormType) => async (dispatch: any) => {
         dispatch(setAuthData(dataForReducer))
 
     } catch (err: any) {
-         if (err.message == "Network Error") {
-             dispatch(setError({error: "Network Error"}))
-         } else {
-             const error = err.response.data.message
-             dispatch(setError({error}))
-         }
-
-    }
-}
-
-
-export const registerApl = (data: RegistrationFormApplicantType) => async (dispatch: any) => {
-    try {
-        const response = await authAPI.registerApl(data.firstName, data.secondName, data.surname, data.phone, data.login, data.password, data.email, data.role)
-        localStorage.setItem('token', response.data.token)
-        const jwt = jwtDecode(response.data.token)
-        dispatch(unSetError())
-        dispatch(isSuccessRegistration())
-
-    } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             dispatch(setError({error: "Network Error"}))
         } else {
             const error = err.response.data.message
             dispatch(setError({error}))
         }
+
     }
 }
 
-export const registerEmp = (data: RegistrationFormEmployerType) => async (dispatch: any) => {
+export const registerApl = (data: RegistrationApplicantType) => async (dispatch: any) => {
+
+    dispatch(loadingStatus(true))
+
     try {
-        const response = await authAPI.registerEmp(
+
+        dispatch(inLoggingSet(false))
+
+        await authAPI.registerApl(
+            data.firstName,
+            data.secondName,
+            data.surname,
+            data.phone,
             data.login,
-            data.name,
+            data.password,
+            data.email,
+            data.role,
+            data.address)
+
+        dispatch(unSetError())
+
+        dispatch(inRegistrationSet(true))
+
+    } catch (err: any) {
+
+        dispatch(inRegistrationSet(false))
+
+        if (err.message === "Network Error") {
+
+            dispatch(setError({error: "Network Error"}))
+
+        } else {
+
+            const error = err.response.data.message
+            dispatch(setError({error}))
+
+        }
+    }
+
+    dispatch(loadingStatus(false))
+
+}
+
+export const registerEmp = (data: RegistrationEmployerType) => async (dispatch: any) => {
+
+    dispatch(loadingStatus(true))
+
+    try {
+
+        await authAPI.registerEmp(
+            data.login,
+            data.name_company,
             data.email,
             data.password,
             data.phone,
-            data.settlements_id,
-            data.street_id,
-            data.number_house,
+            data.address,
             data.role,
-            data.short_name
+            data.short_name,
         )
-        localStorage.setItem('token', response.data.token)
-        const jwt = jwtDecode(response.data.token)
+
         dispatch(unSetError())
-        dispatch(isSuccessRegistration())
+
+        dispatch(inRegistrationSet(true))
 
     } catch (err: any) {
-        if (err.message == "Network Error") {
+
+        dispatch(inRegistrationSet(false))
+
+        if (err.message === "Network Error") {
+
             dispatch(setError({error: "Network Error"}))
+
         } else {
+
+            console.log(err)
             const error = err.response.data.message
-            console.error(err)
-           // dispatch(setError({error}))
+            dispatch(setError({error}))
+
         }
     }
+
+    dispatch(loadingStatus(false))
 }
 
 
