@@ -93,17 +93,7 @@ export const vacancyAPI = {
     }
 }
 
-export const reportApi = {
-    reportOne(post: string, date_start: string, date_end: string) {
-        return instance.get(`api/vacancy/reportOne/?post=${post}&date_start=${date_start}&date_end=${date_end}`)
-    },
-    reportTwo(date_start: string, date_end: string) {
-        return instance.get(`api/vacancy/reportTwo/?date_start=${date_start}&date_end=${date_end}`)
-    },
-    reportThree(date_start: string, date_end: string) {
-        return instance.get(`api/vacancy/reportThree/?date_start=${date_start}&date_end=${date_end}`)
-    },
-}
+
 export const userAPI = {
     getApl(id: number) {
         return instance.get(`api/applicant/${id}`)
@@ -115,10 +105,9 @@ export const userAPI = {
         return instance.post('api/employer/update', {
             id: data.id,
             email: data.email,
-            login: data.login,
-            name: data.name,
             phone: data.phone,
-            short_name: data.short_name
+            short_name: data.short_name,
+            about: data.about
         })
     },
     updateApl(data: ProfileAplForm) {

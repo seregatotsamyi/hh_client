@@ -11,30 +11,32 @@ import {setCountVacancyUser} from "./vacancyReducer";
 export interface InitialStateType {
     employers: {
         login: string | null
-        name: string | null
+        name_company: string | null
         short_name: string | null
         email: string | null
-        phone: string | null
+        phone: undefined | null
+        about: string | null
     }
     applicant: {
         login: string | null
         first_name: string | null
         second_name: string | null
         email: string | null
-        phone: string | null
+        phone: undefined | null
         surname: string | null
+        about: string | null
     },
     response: string | null,
-
 }
 
 const initialState: InitialStateType = {
     employers: {
         login: null,
-        name: null,
+        name_company: null,
         email: null,
         short_name: null,
         phone: null,
+        about: null
     },
     applicant: {
         login: null,
@@ -42,7 +44,8 @@ const initialState: InitialStateType = {
         second_name: null,
         email: null,
         phone: null,
-        surname: null
+        surname: null,
+        about: null
     },
     response: null,
 
@@ -89,7 +92,7 @@ export const getUser = (data: getUserType) => async (dispatch: any) => {
 
 
     } catch (err: any) {
-        if (err.message == "Network Error") {
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message
@@ -103,12 +106,16 @@ export const getUser = (data: getUserType) => async (dispatch: any) => {
 export const updateEmp = (data: ProfileEmpForm) => async (dispatch: any) => {
 
     dispatch(loadingStatus(true))
+
     try {
+
         const response = await userAPI.updateEmp(data)
         dispatch(setEmployersData(response.data))
         dispatch(setResponse("Успешно обновленено"))
+
     } catch (err: any) {
-        if (err.message == "Network Error") {
+
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message
@@ -123,17 +130,22 @@ export const updateEmp = (data: ProfileEmpForm) => async (dispatch: any) => {
 export const updateApl = (data: ProfileAplForm) => async (dispatch: any) => {
 
     dispatch(loadingStatus(true))
+
     try {
+
         const response = await userAPI.updateApl(data)
         dispatch(setApplicantData(response.data))
         dispatch(setResponse("Успешно обновленено"))
+
     } catch (err: any) {
-        if (err.message == "Network Error") {
+
+        if (err.message === "Network Error") {
             console.error("Network Error")
         } else {
             const error = err.response.data.message
             dispatch(setResponse(error))
         }
+
     }
 
     dispatch(loadingStatus(false))

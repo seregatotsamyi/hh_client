@@ -14,8 +14,6 @@ const MainApp = () => {
 
     const dispatch = useAppDispatch()
 
-    const loading = useAppSelector((state: RootState) => state.app.loading)
-
     const [width, setWidth] = useState<number>(window.innerWidth);
 
     useEffect(() => {
@@ -35,11 +33,6 @@ const MainApp = () => {
             dispatch(setTypeApp(typeAppDesktop))
         }
     };
-
-
-    if (loading) {
-        return <Loading/>
-    }
 
     return <RouterProvider router={routers}/>
 }

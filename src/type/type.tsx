@@ -93,12 +93,11 @@ export interface loginFormType {
 export type typeRoll = typeof ROLE_EMP | typeof ROLE_APL
 
 export interface ProfileEmpForm {
-    login: string | null
     role: string
-    name: string | null
     email: string | null
     short_name: string | null
-    phone: string | null
+    phone: undefined | null
+    about: string | null
     id: number | null
 }
 
@@ -134,6 +133,7 @@ export interface createVacancyFormType {
     education_id: number
     duties_array: Array<string>
     kind_activities_array: Array<string>
+    specialization_array: Array<string>
 }
 
 export type vacancyType = {
