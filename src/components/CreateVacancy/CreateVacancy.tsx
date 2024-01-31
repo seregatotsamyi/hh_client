@@ -1,21 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {createVacancyFormType, OptionType} from "../../type/type";
+import React, {useEffect} from 'react';
+import {SubmitHandler, useForm} from "react-hook-form";
+import {createVacancyFormType} from "../../type/type";
 import {nameField, numberField} from "../../utils/validators/validators";
-import {Select} from 'antd';
 import 'dayjs/locale/ru';
 import {RootState} from "../../store/store";
-import {LOGIN_PATH, PROFILE_LIST_VACANCY} from "../../utils/consts";
-import {Navigate} from "react-router-dom";
 import {
-    fetchOptionsActivities,
-    fetchOptionsDuties,
     fetchOptionsEducation,
-    fetchOptionsGender
+    fetchOptionsGender, fetchOptionsSpecializations
 } from "../../store/inputReducer";
-import DateRange from "../Input/DateRange";
-import {createVacancy} from "../../store/vacancyReducer";
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import GenderInput from "../Input/GenderInput";
+import EducationInput from "../Input/EducationInput";
+import SpecializationInput from '../Input/SpecializationInput';
+import AboutInput from "../Input/AboutInput";
+import SkillsInput from '../Input/SkilsInput';
+import SchedulesInput from "../Input/ShedulesInput";
 
 
 const CreateVacancy: React.FC = () => {
@@ -24,116 +23,26 @@ const CreateVacancy: React.FC = () => {
 
     const userId = useAppSelector((state: RootState) => state.auth.userId)
     const isSuccessCreateVacancy = useAppSelector((state: RootState) => state.vacancy.isSuccessCreateVacancy)
-    const optionsGender = useAppSelector((state: RootState) => state.input.optionsGender)
-    const optionsEducation = useAppSelector((state: RootState) => state.input.optionsEducation)
-
-    const optionsGenderSet = optionsGender.map((e: any): OptionType => ({
-        value: e.id,
-        label: e.name,
-    }))
-    const optionsEducationSet = optionsEducation.map((e: any): OptionType => ({
-        value: e.id,
-        label: e.education_value,
-    }))
-
-
-    const [duties, setDuties] = useState<Array<object>>([]);
-    const optionsDuties = useAppSelector((state: RootState) => state.input.optionsDuties)
-    const optionsDutiesSet = optionsDuties.map((e: any): OptionType => ({
-        value: e.id,
-        label: e.duties_volume,
-    }))
-    const dutiesArray: Array<string> = []
-    for (let i = 0; i < duties.length; i++) {
-        //@ts-ignore
-        dutiesArray.push(duties[i].value)
-    }
-
-    const [activities, setActivities] = useState<Array<object>>([]);
-    const optionsActivities = useAppSelector((state: RootState) => state.input.optionsActivities)
-    const optionsActivitiesSet = optionsActivities.map((e: any): OptionType => ({
-        value: e.id,
-        label: e.name,
-    }))
-    const activitiesArray: Array<string> = []
-    for (let i = 0; i < activities.length; i++) {
-        //@ts-ignore
-        activitiesArray.push(activities[i].value)
-    }
-
 
     //Form
     const {
+        handleSubmit,
         register,
         control,
-        handleSubmit,
-        setError,
         formState: {errors},
-        getValues,
-        clearErrors
+        getValues
     } = useForm<createVacancyFormType>()
 
     useEffect(() => {
         dispatch(fetchOptionsGender(null))
         dispatch(fetchOptionsEducation(null))
-        dispatch(fetchOptionsDuties(null))
-        dispatch(fetchOptionsActivities(null))
+        dispatch(fetchOptionsSpecializations(null))
     }, [])
 
-    useEffect(() => {
-        if (duties.length === 0) {
-            clearErrors("duties_array")
-        }
-        if (activities.length === 0) {
-            clearErrors("kind_activities_array")
-        }
-
-    }, [duties, activities])
-
     const onSubmit: SubmitHandler<createVacancyFormType> = (data) => {
-
-        if (duties.length === 0) {
-            setError("duties_array", {
-                type: "manual",
-                message: "Укажите хотя бы одну обязанность",
-            })
-            return
-        }
-        if (activities.length === 0) {
-            setError("kind_activities_array", {
-                type: "manual",
-                message: "Укажите хотя бы одну деятельность",
-            })
-            return
-        }
-
-
-        // @ts-ignore
-        data.gender_id = data.gender_id.value
-        // @ts-ignore
-        data.education_id = data.education_id.value
         data.emp_id = userId
-        data.duties_array = dutiesArray
-        data.kind_activities_array = activitiesArray
-        dispatch(createVacancy(data))
+        //dispatch(createVacancy(data))
         console.log(data)
-    }
-
-
-    //Multiply option
-
-    const handleChange = (value: object[]) => {
-        if (value.length > 0) {
-            clearErrors("duties_array")
-            setDuties(value)
-        }
-    }
-
-    const handleChangeActivities = (value: object[]) => {
-        if (value.length > 0) {
-            clearErrors("kind_activities_array")
-            setActivities(value)
-        }
     }
 
 
@@ -174,26 +83,53 @@ const CreateVacancy: React.FC = () => {
 
                     </li>
                     <li className="profile__form-item">
+
+                        <div className={`login__input input ${errors.about ? "_error" : ""}`}>
+                            <div className="input__input-wrap">
+                                <label className="input__label" htmlFor="name">
+                                    Описание
+                                </label>
+                                <AboutInput control={control} required={true}/>
+                            </div>
+
+                            {
+                                errors.about && (
+                                    <div className="input__error">
+                                        {errors.about.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
+                    <li className="profile__form-item">
+
+                        <div className={`login__input input ${errors.experience ? "_error" : ""}`}>
+                            <div className="input__input-wrap">
+                                <label className="input__label" htmlFor="name">
+                                    Опыт
+                                </label>
+                                <AboutInput control={control} required={true} name={"experience"}/>
+                            </div>
+
+                            {
+                                errors.experience && (
+                                    <div className="input__error">
+                                        {errors.experience.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
+                    <li className="profile__form-item">
                         <div className={`login__input input ${errors.specialization_array ? "_error" : ""}`}>
 
                             <div className="input__input-wrap">
-
 
                                 <label className="input__label" htmlFor="specialization_array">
                                     Специализация
                                 </label>
 
-                                <Select
-                                    className={"ant-custom multiply"}
-                                    labelInValue
-                                    mode="multiple"
-
-                                    onChange={handleChange}
-                                    options={optionsDutiesSet}
-                                    filterOption={(input, option?) =>
-                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                                />
-
+                                <SpecializationInput control={control}/>
 
                             </div>
                             {
@@ -255,35 +191,17 @@ const CreateVacancy: React.FC = () => {
                     </span>
                         </div>
                     </li>
-
                     <li className="profile__form-item">
                         <div className={`login__input input ${errors.gender_id ? "_error" : ""}`}>
 
                             <div className="input__input-wrap">
 
-
                                 <label className="input__label" htmlFor="settlements_id">
                                     Пол
                                 </label>
-                                <Controller
-                                    control={control}
-                                    name='gender_id'
-                                    rules={{
-                                        required: "Поле обязательно для заполнение",
-                                    }}
-                                    render={({field}) => (
-                                        <>
-                                            <Select {...field}
-                                                    className={"ant-custom"}
-                                                    labelInValue
-                                                    options={optionsGenderSet}
 
-                                            />
+                                <GenderInput control={control}/>
 
-
-                                        </>
-                                    )}
-                                />
                             </div>
                             {
                                 errors.gender_id && (
@@ -303,24 +221,9 @@ const CreateVacancy: React.FC = () => {
                                 <label className="input__label" htmlFor="settlements_id">
                                     Образование
                                 </label>
-                                <Controller
-                                    control={control}
-                                    name='education_id'
-                                    rules={{
-                                        required: "Поле обязательно для заполнение",
-                                    }}
-                                    render={({field}) => (
-                                        <>
-                                            <Select {...field}
-                                                    className={"ant-custom"}
-                                                    labelInValue
-                                                    options={optionsEducationSet}
-                                            />
 
+                                <EducationInput control={control}/>
 
-                                        </>
-                                    )}
-                                />
                             </div>
                             {
                                 errors.education_id && (
@@ -331,8 +234,48 @@ const CreateVacancy: React.FC = () => {
                             }
                         </div>
                     </li>
+                    <li className="profile__form-item">
+                        <div className={`login__input input ${errors.schedules ? "_error" : ""}`}>
 
+                            <div className="input__input-wrap">
 
+                                <label className="input__label" htmlFor="specialization_array">
+                                    График*()
+                                </label>
+
+                                <SchedulesInput control={control}/>
+
+                            </div>
+                            {
+                                errors.schedules && (
+                                    <div className="input__error">
+                                        {errors.schedules.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
+                    <li className="profile__form-item">
+                        <div className={`login__input input ${errors.skills ? "_error" : ""}`}>
+
+                            <div className="input__input-wrap">
+
+                                <label className="input__label" htmlFor="specialization_array">
+                                    НавыкиГрафик*()
+                                </label>
+
+                                <SkillsInput control={control}/>
+
+                            </div>
+                            {
+                                errors.skills && (
+                                    <div className="input__error">
+                                        {errors.skills.message}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </li>
 
                 </ul>
 

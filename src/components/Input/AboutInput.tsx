@@ -6,19 +6,35 @@ const AboutInput = (props: any) => {
 
     const {TextArea} = Input;
 
-    return (
-        <Controller
-            name="about"
-            control={props.control}
-            rules={{
+    let rules: any = {}
+
+    if (props.required) {
+        rules =
+            {
                 maxLength: {
                     value: 2000,
                     message: 'Максимум 2000 символа'
                 },
-            }}
+                required: "Поле обязательно для заполнение",
+            }
+
+    } else {
+        rules = {
+            maxLength: {
+                value: 2000,
+                message: 'Максимум 2000 символа'
+            }
+        }
+    }
+
+    return (
+        <Controller
+            name={props.name ? props.name : "about"}
+            control={props.control}
+            rules={rules}
             render={({field}) => (
                 <TextArea {...field}
-                          placeholder="Заполните этот текст, чтобы о вас больше узнали!"
+                          placeholder="Ваш текст"
                           autoSize={{minRows: 2, maxRows: 21}}
                           disabled={props.disabled ? props.disabled : false}
                 />

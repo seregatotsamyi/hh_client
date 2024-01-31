@@ -101,6 +101,7 @@ export const userAPI = {
     getEmp(id: number) {
         return instance.get(`api/employer/${id}`)
     },
+
     updateEmp(data: ProfileEmpForm) {
         return instance.post('api/employer/update', {
             id: data.id,
@@ -110,6 +111,7 @@ export const userAPI = {
             about: data.about
         })
     },
+
     updateApl(data: ProfileAplForm) {
         return instance.post('api/applicant/update', {
             id: data.id,
@@ -121,6 +123,7 @@ export const userAPI = {
             surname: data.surname
         })
     },
+
     getGender(id: number | null = null) {
         if (id) {
             return instance.get(`api/gender/${id}`)
@@ -137,18 +140,11 @@ export const userAPI = {
         }
 
     },
-    getDuties(id: number | null = null) {
+    getSpecializations(id: number | null = null) {
         if (id) {
-            return instance.get(`api/duties/${id}`)
+            return instance.get(`api/specializations/${id}`)
         } else {
-            return instance.get(`api/duties`)
-        }
-    },
-    getActivities(id: number | null = null) {
-        if (id) {
-            return instance.get(`api/activities/${id}`)
-        } else {
-            return instance.get(`api/activities`)
+            return instance.get(`api/specializations`)
         }
     }
 }
